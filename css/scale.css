@@ -1,0 +1,23 @@
+.device-scale {
+	margin: 30px;
+	display: inline-block;
+	font: 14px/16px "Helvetica Neue", Helvetica, sans-serif;
+	color: #fff;
+	font-weight: bold;
+}
+
+.device-scale * {
+	display: inline-block;
+}
+
+.device-scale ul {
+	-webkit-border-radius: 10px;
+	-webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+	background: rgba(0, 0, 0, 0.8);
+}
+
+.device-scale li {
+	padding: 0 10px;
+	height: 44px;
+	line-height: 44px;
+}
