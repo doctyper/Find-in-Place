@@ -23,43 +23,43 @@
 // THE SOFTWARE.
 
 (function() {
-  var hasTouchSupport = "createTouch" in document;
-  if (!hasTouchSupport) return;
+	var hasTouchSupport = "createTouch" in document;
+	if (!hasTouchSupport) return;
 
-  var headElement  = document.getElementsByTagName("head")[0];
-  var styleElement = document.createElement("style");
+	var headElement	 = document.getElementsByTagName("head")[0];
+	var styleElement = document.createElement("style");
 
-  styleElement.setAttribute("type", "text/css");
-  headElement.appendChild(styleElement);
+	styleElement.setAttribute("type", "text/css");
+	headElement.appendChild(styleElement);
 
-  var stylesheet = styleElement.sheet;
+	var stylesheet = styleElement.sheet;
 
-  window.addEventListener("scroll", updateDeviceScaleStyle, false);
-  window.addEventListener("resize", updateDeviceScaleStyle, false);
-  window.addEventListener("load",   updateDeviceScaleStyle, false);
-  updateDeviceScaleStyle();
+	window.addEventListener("scroll", updateDeviceScaleStyle, false);
+	window.addEventListener("resize", updateDeviceScaleStyle, false);
+	window.addEventListener("load", updateDeviceScaleStyle, false);
+	updateDeviceScaleStyle();
 
-  function updateDeviceScaleStyle() {
-    if (stylesheet.rules.length) {
-      stylesheet.deleteRule(0);
-    }
+	function updateDeviceScaleStyle() {
+		if (stylesheet.rules.length) {
+			stylesheet.deleteRule(0);
+		}
 
-    stylesheet.insertRule(
-      ".device-scale {-webkit-transform:scale(" + getDeviceScale() + ")}", 0
-    );
-  }
+		stylesheet.insertRule(
+			".device-scale {-webkit-transform:scale(" + getDeviceScale() + ")}", 0
+		);
+	}
 
-  // Adapted from code by Mislav Marohnić: http://gist.github.com/355625
-  function getDeviceScale() {
-    var deviceWidth, landscape = Math.abs(window.orientation) == 90;
+	// Adapted from code by Mislav Marohnić: http://gist.github.com/355625
+	function getDeviceScale() {
+		var deviceWidth, landscape = Math.abs(window.orientation) == 90;
 
-    if (landscape) {
-      // iPhone OS < 3.2 reports a screen height of 396px
-      deviceWidth = Math.max(480, screen.height);
-    } else {
-      deviceWidth = screen.width;
-    }
+		if (landscape) {
+			// iPhone OS < 3.2 reports a screen height of 396px
+			deviceWidth = Math.max(480, screen.height);
+		} else {
+			deviceWidth = screen.width;
+		}
 
-    return window.innerWidth / deviceWidth;
-  }
+		return window.innerWidth / deviceWidth;
+	}
 })();
