@@ -1,0 +1,9 @@
+body *[class*="fip-"] {
+	opacity: 1;
+	-webkit-transition: opacity 250ms ease-in;
+	-webkit-backface-visibility: hidden;
+}
+
+body.fip-gesture *[class*="fip-"] {
+	opacity: 0;
+}
