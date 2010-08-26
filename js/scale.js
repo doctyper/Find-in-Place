@@ -45,7 +45,7 @@
 		}
 
 		stylesheet.insertRule(
-			".device-scale {-webkit-transform:scale(" + getDeviceScale() + ")}", 0
+			".fip-device-scale {-webkit-transform:scale(" + getDeviceScale() + ")}", 0
 		);
 	}
 
