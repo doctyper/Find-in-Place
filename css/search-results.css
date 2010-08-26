@@ -1,0 +1,24 @@
+.fip-search-results {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 9000;
+	background: rgba(0, 0, 0, 0.22);
+	pointer-events: none;
+}
+
+.fip-search-results .fip-result {
+	position: absolute;
+	z-index: 10000;
+	margin-top: -2px;
+	margin-left: -2px;
+	padding: 1px;
+	display: inline-block;
+	border: 1px solid #f1d926;
+	-webkit-border-radius: 3px;
+	color: #000;
+	background: -webkit-gradient(linear, left top, left bottom, from(#f4ea26), to(#edcf00));
+	-webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.8);
+}
