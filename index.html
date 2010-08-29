@@ -7,8 +7,8 @@
 		
 		<link rel="stylesheet" href="css/reset.css" type="text/css" media="screen" />
 		<link rel="stylesheet" href="css/scale.css" type="text/css" media="screen" />
-		<link rel="stylesheet" href="css/hide-on-gesture.css" type="text/css" media="screen" />
 		<link rel="stylesheet" href="css/search-results.css" type="text/css" media="screen" />
+		<link rel="stylesheet" href="css/popover.css" type="text/css" media="screen" />
 		
 		<!-- Page Specific -->
 		<style type="text/css" media="screen">
@@ -20,6 +20,8 @@
 			}
 
 			body {
+				width: 768px;
+				padding: 120px 20px;
 				font-size: 100%;
 				font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 			}
@@ -41,29 +43,32 @@
 		</style>
 	</head>
 	<body>
-		
-		<div class="fip-device-scale">
-			<ul><li>Prev</li><li>Next</li></ul>
-		</div>
-		
-		<h2>Lorem ipsum dolor sit amet</h2>
-		<p>Lorem ipsum dolor sit amet, <a href="#">consectetur adipiscing elit</a>. Vestibulum facilisis nisi et nunc mattis <em>posuere hendrerit eros lacinia. Suspendisse potenti</em>. <span class="fip-result">Quisque</span> elit massa, semper non lacinia ut, ultricies in mauris. Maecenas feugiat ultricies massa, quis tristique urna condimentum sit amet. Fusce at sapien quis justo tincidunt dapibus. Ut lacus risus, mattis mollis iaculis quis, tempus a neque. <a href"#">Morbi placerat ornare dui eu dignissim</a>. Nunc ac blandit urna. Maecenas scelerisque congue eros in ultrices. Nulla ut quam eu libero mollis hendrerit. Morbi vestibulum ullamcorper blandit. Suspendisse potenti. Ut eu ante erat, posuere bibendum libero. Sed sagittis, sapien eu feugiat malesuada, <strong>velit velit congue tellus</strong>, mattis hendrerit mauris eros eu purus. Donec varius volutpat diam bibendum pellentesque. Sed nisi mi, dignissim at elementum et, ullamcorper non dui. Nulla facilisi. Integer non lorem metus, ut sagittis orci. Cras varius nulla et tellus placerat ultricies. Aenean bibendum tristique lectus, sed venenatis enim tristique quis.</p>
+		<h2><span class="fip-result fip-inline-result">Lorem</span> ipsum dolor sit amet</h2>
+		<p><span class="fip-result fip-inline-result">Lorem</span> ipsum dolor sit amet, <a href="#">consectetur adipiscing elit</a>. Vestibulum facilisis nisi et nunc mattis <em>posuere hendrerit eros lacinia. Suspendisse potenti</em>. Quisque elit massa, semper non lacinia ut, ultricies in mauris. Maecenas feugiat ultricies massa, quis tristique urna condimentum sit amet. Fusce at sapien quis justo tincidunt dapibus. Ut lacus risus, mattis mollis iaculis quis, tempus a neque. <a href"#">Morbi placerat ornare dui eu dignissim</a>. Nunc ac blandit urna. Maecenas scelerisque congue eros in ultrices. Nulla ut quam eu libero mollis hendrerit. Morbi vestibulum ullamcorper blandit. Suspendisse potenti. Ut eu ante erat, posuere bibendum libero. Sed sagittis, sapien eu feugiat malesuada, <strong>velit velit congue tellus</strong>, mattis hendrerit mauris eros eu purus. Donec varius volutpat diam bibendum pellentesque. Sed nisi mi, dignissim at elementum et, ullamcorper non dui. Nulla facilisi. Integer non <span class="fip-result fip-inline-result">lorem</span> metus, ut sagittis orci. Cras varius nulla et tellus placerat ultricies. Aenean bibendum tristique lectus, sed venenatis enim tristique quis.</p>
 		
 		<h3>Cras porta blandit diam non egestas</h3>
-		<p>Cras porta blandit diam non egestas. In dignissim lacinia lorem, id lobortis sapien pulvinar id. Ut sed congue arcu. Maecenas nisl nunc, elementum at laoreet a, sodales varius dolor. Morbi lobortis tellus ac ante aliquet non <strong>consequat diam viverra. Mauris ullamcorper</strong> pulvinar mi, sodales mattis quam adipiscing sit amet. Ut non felis orci, nec commodo augue. <a href="#">Donec porttitor consequat rutrum</a>. Phasellus porttitor egestas ullamcorper. Ut sem mi, sagittis sit amet dapibus cursus, interdum et purus. Aliquam eget consectetur metus. Maecenas sagittis dignissim lacus sed ultricies.</p>
+		<p>Cras porta blandit diam non egestas. In dignissim lacinia <span class="fip-result fip-inline-result">lorem</span>, id lobortis sapien pulvinar id. Ut sed congue arcu. Maecenas nisl nunc, elementum at laoreet a, sodales varius dolor. Morbi lobortis tellus ac ante aliquet non <strong>consequat diam viverra. Mauris ullamcorper</strong> pulvinar mi, sodales mattis quam adipiscing sit amet. Ut non felis orci, nec commodo augue. <a href="#">Donec porttitor consequat rutrum</a>. Phasellus porttitor egestas ullamcorper. Ut sem mi, sagittis sit amet dapibus cursus, interdum et purus. Aliquam eget consectetur metus. Maecenas sagittis dignissim lacus sed ultricies.</p>
 		
 		<h3>Quisque tristique mollis quam</h3>
 		<p>Quisque tristique mollis quam, a facilisis tellus eleifend sed. Aliquam auctor porttitor tellus. Sed ut mauris justo, sit amet lobortis velit. Maecenas molestie orci id velit rhoncus commodo. Nullam est sem, accumsan id cursus ut, convallis eget magna. Cras est <strong>metus, gravida eget pellentesque ac, lobortis ut enim</strong>. Ut pharetra varius augue. Aliquam commodo dapibus eros non convallis. <a href="#">Maecenas ac dui ut <em>nulla</em> commodo pharetra</a>. Fusce ut metus ut diam aliquet tempor. Aenean venenatis vulputate est at posuere. Ut quis justo eu nulla facilisis volutpat non eget tortor. In est mauris, commodo eu ultricies ac, laoreet ac lectus. Sed sagittis lectus nec leo pulvinar tempus vel et nulla.</p>
 
 		<h2>Etiam dignissim pellentesque tincidunt</h2>
-		<p>Etiam dignissim pellentesque tincidunt. Suspendisse imperdiet felis et metus commodo luctus. Suspendisse faucibus suscipit turpis vel auctor. Sed non est ut libero lacinia fringilla vitae vitae nunc. Duis posuere, velit ac semper varius, orci magna pretium magna, vitae ullamcorper eros lectus ut mi. Fusce at purus id est interdum condimentum hendrerit sed massa. Ut faucibus mattis leo, sit amet auctor nunc aliquam quis. <strong>Vivamus turpis metus, consectetur in ullamcorper quis</strong>, adipiscing in nulla. Mauris id quam sed odio euismod luctus. Vestibulum velit ipsum, commodo at fermentum sed, sodales eget leo. Nam congue, mauris sit amet faucibus consectetur, <em>ipsum sem tristique est, id condimentum massa</em> tellus in orci. Cras nec lacus ut erat aliquet tempor malesuada ut turpis. Aliquam sit amet ante enim, non condimentum sem. Nunc vulputate augue ut neque molestie quis pulvinar sem rutrum. <a href="#">Sed sem orci, fringilla <span>volutpat pulvinar</span> eu, dictum sit amet enim</a>. Duis congue, turpis nec egestas rutrum, quam velit rutrum augue, ut blandit lorem tellus sit amet dolor. Duis lacinia, nibh at luctus porta, mauris sapien tempus nisl, vitae tristique ante ipsum ut elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+		<p>Etiam dignissim pellentesque tincidunt. Suspendisse imperdiet felis et metus commodo luctus. Suspendisse faucibus suscipit turpis vel auctor. Sed non est ut libero lacinia fringilla vitae vitae nunc. Duis posuere, velit ac semper varius, orci magna pretium magna, vitae ullamcorper eros lectus ut mi. Fusce at purus id est interdum condimentum hendrerit sed massa. Ut faucibus mattis leo, sit amet auctor nunc aliquam quis. <strong>Vivamus turpis metus, consectetur in ullamcorper quis</strong>, adipiscing in nulla. Mauris id quam sed odio euismod luctus. Vestibulum velit ipsum, commodo at fermentum sed, sodales eget leo. Nam congue, mauris sit amet faucibus consectetur, <em>ipsum sem tristique est, id condimentum massa</em> tellus in orci. Cras nec lacus ut erat aliquet tempor malesuada ut turpis. Aliquam sit amet ante enim, non condimentum sem. Nunc vulputate augue ut neque molestie quis pulvinar sem rutrum. <a href="#">Sed sem orci, fringilla <span>volutpat pulvinar</span> eu, dictum sit amet enim</a>. Duis congue, turpis nec egestas rutrum, quam velit rutrum augue, ut blandit <span class="fip-result fip-inline-result">lorem</span> tellus sit amet dolor. Duis lacinia, nibh at luctus porta, mauris sapien tempus nisl, vitae tristique ante ipsum ut elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
 
-		<h3>Lorem ipsum dolor sit amet</h3>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Sed ultrices condimentum auctor. Maecenas placerat tempor euismod</strong>. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas molestie tempor est, ut condimentum elit hendrerit eget. Vivamus posuere scelerisque turpis, at tempus libero suscipit ac. <em>Mauris tincidunt posuere posuere</em>. Donec sed nisi a purus lobortis mollis. Morbi quis lacinia eros. Nulla tincidunt mauris nulla. In rhoncus commodo felis at volutpat. Donec vitae varius magna. Vestibulum in augue leo. Donec et sem nec augue porta venenatis.</p>
+		<h3><span class="fip-result fip-inline-result">Lorem</span> ipsum dolor sit amet</h3>
+		<p><span class="fip-result fip-inline-result">Lorem</span> ipsum dolor sit amet, consectetur adipiscing elit. <strong>Sed ultrices condimentum auctor. Maecenas placerat tempor euismod</strong>. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas molestie tempor est, ut condimentum elit hendrerit eget. Vivamus posuere scelerisque turpis, at tempus libero suscipit ac. <em>Mauris tincidunt posuere posuere</em>. Donec sed nisi a purus lobortis mollis. Morbi quis lacinia eros. Nulla tincidunt mauris nulla. In rhoncus commodo felis at volutpat. Donec vitae varius magna. Vestibulum in augue leo. Donec et sem nec augue porta venenatis.</p>
+		
+		<div class="fip-search fip-device-scale">
+			<form action="#">
+				<fieldset>
+					<input type="search" value="" placeholder="Search Page" />
+					<input type="reset" value="Cancel" />
+				</fieldset>
+			</form>
+		</div>
 		
 		<script src="js/utils.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/scale.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/hide-on-gesture.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/search-results.js" type="text/javascript"></script>
 	</body>
 </html>
