@@ -1,3 +1,21 @@
+@-webkit-keyframes fip-result {
+	0% {
+		-webkit-transform: scale(0.6);
+	}
+	
+	50% {
+		-webkit-transform: scale(1);
+	}
+	
+	75% {
+		-webkit-transform: scale(1.25);
+	}
+	
+	100% {
+		-webkit-transform: scale(1);
+	}
+}
+
 .fip-search-results {
 	top: 0;
 	left: 0;
@@ -16,9 +34,18 @@
 	margin-left: -2px;
 	padding: 1px;
 	display: inline-block;
+	border: 1px solid #fff;
+	color: #000;
+	background: rgba(255, 255, 255, 0.9);
+	-webkit-transform: translate3d(0, 0, 0) scale(1);
+	-webkit-backface-visibility: hidden;
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.fip-search-results .fip-active-result {
 	border: 1px solid #f1d926;
 	-webkit-border-radius: 3px;
-	color: #000;
 	background: -webkit-gradient(linear, left top, left bottom, from(#f4ea26), to(#edcf00));
-	-webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.8);
+	-webkit-animation: fip-result 150ms linear;
+	z-index: 11000;
 }
