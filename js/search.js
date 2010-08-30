@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			span = d.createElement("span");
 			parent.replaceChild(span, textNode);
 			span.appendChild(textNode);
-			span.className = "fip-result";
+			span.className = "fip-result fip-inline-result";
 			
 			// console.log(span.nextSibling.data);
 			// console.log("================")
