@@ -47,8 +47,8 @@ document.addEventListener("DOMContentLoaded", function() {
 			node.appendChild(popover);
 		}
 		
-		var left = node.offsetLeft - (window.innerWidth / 2),
-		    top = node.offsetTop - (window.innerHeight / 2);
+		var left = (node.offsetLeft + (node.offsetWidth / 2)) - (window.innerWidth / 2),
+		    top = (node.offsetTop + (node.offsetHeight / 2)) - (window.innerHeight / 2);
 		
 		window.scrollTo(left, top);
 	}
