@@ -9,6 +9,7 @@
 	position: absolute;
 	z-index: 10000;
 	background: -webkit-gradient(linear, left top, left bottom, from(#dcdfe0), to(#abb7bf), color-stop(50%, #bfc8ce), color-stop(50%, #c4ccd1));
+	-webkit-transform-origin: 0 0;
 }
 
 .fip-search form {
