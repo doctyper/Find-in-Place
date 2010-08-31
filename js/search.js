@@ -1,13 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
 	(function search(needle) {
-		var d = document,
-			needleLength = needle.length;
-
-		if (needleLength < 1) {
+		if (!needle) {
 			throw("Error: Nice try. No searching for empty strings. Go stare into the void on your own dime.");
+		} else if (typeof needle !== "string") {
+			throw("TypeError: We can only find Strings. Not " + typeof needle + "s, not your lost cat, not anything else.");
 		}
 
-		var caseInsensitiveNeedle = new RegExp(needle, "i"),
+		var d = document,
+			needleLength = needle.length,
+			caseInsensitiveNeedle = new RegExp(needle, "i"),
 
 			// XPath is write-only, like Regexes and Perl.
 			// This expression selects all text nodes that satisfy the condition that:
@@ -35,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			textNode = snapshot.snapshotItem(i);
 			parent = textNode.parentNode;
 
-			while ((match = caseInsensitiveNeedle.exec(textNode.data)) !== null) {
+			while (textNode && (match = caseInsensitiveNeedle.exec(textNode.data)) !== null) {
 				// console.log("Found " + match[0] + " at " + match.index + " in \"" + textNode.data + "\".");
 
 				text = textNode.data;
