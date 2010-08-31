@@ -1,6 +1,9 @@
 //= require "namespace"
 
 FIP.Search = function (needle) {
+	
+	FIP.utils.watchScale();
+	
 	var d = document,
 		needleLength = needle.length;
 

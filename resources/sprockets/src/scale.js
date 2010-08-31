@@ -24,7 +24,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-FIP.utils.scaleWatcher = (function() {
+FIP.utils.watchScale = function() {
+	
+	var hasTouchSupport = "createTouch" in document;
+	if (!hasTouchSupport || FIP.vars.scaleBeingWatched) {
+		return;
+	}
+	
+	FIP.vars.scaleBeingWatched = true;
+
+	var headElement	 = document.getElementsByTagName("head")[0];
+	var styleElement = document.createElement("style");
+
+	var stylesheet = styleElement.sheet;
+	
 	function updateDeviceScaleStyle() {
 		if (stylesheet.rules.length) {
 			stylesheet.deleteRule(0);
@@ -48,23 +61,13 @@ FIP.utils.scaleWatcher = (function() {
 
 		return window.innerWidth / deviceWidth;
 	}
-	
-	var hasTouchSupport = "createTouch" in document;
-	if (!hasTouchSupport) {
-		return;
-	}
-
-	var headElement	 = document.getElementsByTagName("head")[0];
-	var styleElement = document.createElement("style");
 
 	styleElement.setAttribute("type", "text/css");
 	headElement.appendChild(styleElement);
-
-	var stylesheet = styleElement.sheet;
 
 	updateDeviceScaleStyle();
 	
 	window.addEventListener("scroll", updateDeviceScaleStyle, false);
 	window.addEventListener("resize", updateDeviceScaleStyle, false);
 	window.addEventListener("load", updateDeviceScaleStyle, false);
-})();
+};
