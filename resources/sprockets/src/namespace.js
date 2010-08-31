@@ -186,5 +186,5 @@ FIP.utils = {
 		 	&& !skip) {
 			return true;
 		}
-	},
+	}
 };
