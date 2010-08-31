@@ -1,9 +1,9 @@
 //= require "namespace"
+//= require "results"
+//= require "scale"
+//= require "bar"
 
 FIP.Search = function (needle) {
-	
-	FIP.utils.watchScale();
-	
 	if (!needle) {
 		throw("Error: Nice try. No searching for empty strings. Go stare into the void on your own dime.");
 	} else if (typeof needle !== "string") {
