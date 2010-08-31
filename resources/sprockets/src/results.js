@@ -1,9 +1,51 @@
 //= require "namespace"
 
+FIP.utils.injectPopover = function(result) {
+	var names = {
+		popover : FIP.utils.createClassName("popover")
+	};
+	
+	result.innerHTML += FIP.vars.popoverHTML;
+	var popover = result.querySelector("." + names.popover);
+	
+	popover.querySelector("li:first-child").addEventListener("touchend", function() {
+		var element = popover.parentNode.previousSibling;
+		
+		while (element && element.resultType !== 1) {
+			element = element.previousSibling;
+		}
+		
+		if (!element) {
+			element = document.querySelector("." + names.results + " ." + names.result + ":last-child");
+		}
+		
+		FIP.utils.makeResultActive(element);
+	}, false);
+	
+	popover.querySelector("li:last-child").addEventListener("touchend", function() {
+		var element = popover.parentNode.nextSibling;
+		
+		while (element && element.resultType !== 1) {
+			element = element.nextSibling;
+		}
+		
+		if (!element) {
+			element = document.querySelector("." + names.results + " ." + names.result + ":first-child");
+		}
+		
+		FIP.utils.makeResultActive(element);
+	}, false);
+	
+	return popover;
+};
+
 FIP.utils.makeResultActive = function(result) {
+	if (!FIP.vars.popover) {
+		FIP.vars.popover = FIP.utils.injectPopover(result);
+	}
+	
 	var names = {
 		active : FIP.utils.createClassName("active-result"),
-		popover : FIP.utils.createClassName("popover"),
 		result : FIP.utils.createClassName("result"),
 		results : FIP.utils.createClassName("search-results")
 	};
@@ -16,40 +58,7 @@ FIP.utils.makeResultActive = function(result) {
 	
 	FIP.utils.addClass(result, names.active);
 	
-	if (!FIP.vars.popover) {
-		result.innerHTML += FIP.vars.popoverHTML;
-		FIP.vars.popover = result.querySelector("." + names.popover);
-		
-		FIP.vars.popover.querySelector("li:first-child").addEventListener("touchend", function() {
-			var element = FIP.vars.popover.parentNode.previousSibling;
-			
-			while (element && element.resultType !== 1) {
-				element = element.previousSibling;
-			}
-			
-			if (!element) {
-				element = document.querySelector("." + names.results + " ." + names.result + ":last-child");
-			}
-			
-			FIP.utils.makeResultActive(element);
-		}, false);
-		
-		FIP.vars.popover.querySelector("li:last-child").addEventListener("touchend", function() {
-			var element = FIP.vars.popover.parentNode.nextSibling;
-			
-			while (element && element.resultType !== 1) {
-				element = element.nextSibling;
-			}
-			
-			if (!element) {
-				element = document.querySelector("." + names.results + " ." + names.result + ":first-child");
-			}
-			
-			FIP.utils.makeResultActive(element);
-		}, false);
-	} else {
-		result.appendChild(FIP.vars.popover);
-	}
+	result.appendChild(FIP.vars.popover);
 	
 	var left = (result.offsetLeft + (result.offsetWidth / 2)) - (window.innerWidth / 2),
 	    top = (result.offsetTop + (result.offsetHeight / 2)) - (window.innerHeight / 2);
