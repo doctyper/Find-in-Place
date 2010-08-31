@@ -1,3 +1,5 @@
+//= require "namespace"
+
 // Provides a device_scale class on iOS devices for scaling user
 // interface elements relative to the current zoom factor.
 //
@@ -22,30 +24,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-(function() {
+FIP.utils.watchScale = function() {
+	var names = {
+		scale : FIP.utils.createClassName("device-scale")
+	};
+	
 	var hasTouchSupport = "createTouch" in document;
-	if (!hasTouchSupport) return;
+	if (!hasTouchSupport || FIP.vars.scaleBeingWatched) {
+		return;
+	}
+	
+	FIP.vars.scaleBeingWatched = true;
 
 	var headElement	 = document.getElementsByTagName("head")[0];
 	var styleElement = document.createElement("style");
 
-	styleElement.setAttribute("type", "text/css");
-	headElement.appendChild(styleElement);
-
 	var stylesheet = styleElement.sheet;
-
-	window.addEventListener("scroll", updateDeviceScaleStyle, false);
-	window.addEventListener("resize", updateDeviceScaleStyle, false);
-	window.addEventListener("load", updateDeviceScaleStyle, false);
-	updateDeviceScaleStyle();
-
+	
 	function updateDeviceScaleStyle() {
 		if (stylesheet.rules.length) {
 			stylesheet.deleteRule(0);
 		}
 
 		stylesheet.insertRule(
-			".fip-device-scale {-webkit-transform:scale(" + getDeviceScale() + ")}", 0
+			"." + names.scale + " {-webkit-transform:scale(" + getDeviceScale() + ")}", 0
 		);
 	}
 
@@ -62,4 +64,13 @@
 
 		return window.innerWidth / deviceWidth;
 	}
-})();
+
+	styleElement.setAttribute("type", "text/css");
+	headElement.appendChild(styleElement);
+
+	updateDeviceScaleStyle();
+	
+	window.addEventListener("scroll", updateDeviceScaleStyle, false);
+	window.addEventListener("resize", updateDeviceScaleStyle, false);
+	window.addEventListener("load", updateDeviceScaleStyle, false);
+};
