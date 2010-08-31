@@ -1,17 +1,24 @@
 //= require "namespace"
 
 FIP.utils.makeResultActive = function(result) {
-	var oldNode = document.querySelector(".fip-active-result");
+	var names = {
+		active : FIP.utils.createClassName("active-result"),
+		popover : FIP.utils.createClassName("popover"),
+		result : FIP.utils.createClassName("result"),
+		results : FIP.utils.createClassName("search-results")
+	};
+	
+	var oldNode = document.querySelector("." + names.active);
 	
 	if (oldNode) {
-		FIP.utils.removeClass(oldNode, "fip-active-result");
+		FIP.utils.removeClass(oldNode, names.active);
 	}
 	
-	FIP.utils.addClass(result, "fip-active-result");
+	FIP.utils.addClass(result, names.active);
 	
 	if (!FIP.vars.popover) {
 		result.innerHTML += FIP.vars.popoverHTML;
-		FIP.vars.popover = result.querySelector(".fip-popover");
+		FIP.vars.popover = result.querySelector("." + names.popover);
 		
 		FIP.vars.popover.querySelector("li:first-child").addEventListener("touchend", function() {
 			var element = FIP.vars.popover.parentNode.previousSibling;
@@ -21,7 +28,7 @@ FIP.utils.makeResultActive = function(result) {
 			}
 			
 			if (!element) {
-				element = document.querySelector(".fip-search-results .fip-result:last-child");
+				element = document.querySelector("." + names.results + " ." + names.result + ":last-child");
 			}
 			
 			FIP.utils.makeResultActive(element);
@@ -35,7 +42,7 @@ FIP.utils.makeResultActive = function(result) {
 			}
 			
 			if (!element) {
-				element = document.querySelector(".fip-search-results .fip-result:first-child");
+				element = document.querySelector("." + names.results + " ." + names.result + ":first-child");
 			}
 			
 			FIP.utils.makeResultActive(element);
@@ -51,7 +58,11 @@ FIP.utils.makeResultActive = function(result) {
 };
 
 FIP.utils.cloneResult = function(result) {
-	var parent = document.querySelector(".fip-search-results"),
+	var names = {
+		results : FIP.utils.createClassName("search-results")
+	};
+	
+	var parent = document.querySelector("." + names.results),
 	    typography = FIP.vars.typography;
 	
 	var box = result.getBoundingClientRect(),
@@ -60,7 +71,7 @@ FIP.utils.cloneResult = function(result) {
 	
 	if (!parent) {
 		parent = document.createElement("div");
-		parent.setAttribute("class", "fip-search-results");
+		parent.setAttribute("class", names.results);
 		parent.style.setProperty("width", Math.max(window.innerWidth, document.body.clientWidth) + "px");
 		parent.style.setProperty("height", Math.max(window.innerHeight, document.body.clientHeight) + "px");
 		

@@ -25,6 +25,9 @@
 // THE SOFTWARE.
 
 FIP.utils.watchScale = function() {
+	var names = {
+		scale : FIP.utils.createClassName("device-scale")
+	};
 	
 	var hasTouchSupport = "createTouch" in document;
 	if (!hasTouchSupport || FIP.vars.scaleBeingWatched) {
@@ -44,7 +47,7 @@ FIP.utils.watchScale = function() {
 		}
 
 		stylesheet.insertRule(
-			".fip-device-scale {-webkit-transform:scale(" + getDeviceScale() + ")}", 0
+			"." + names.scale + " {-webkit-transform:scale(" + getDeviceScale() + ")}", 0
 		);
 	}
 

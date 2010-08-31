@@ -22,13 +22,14 @@ Requires:
 Class: FIP
 	Scoped to the FIP Global Namespace
 */
-window.FIP = window.FIP || {};
+var FIP = window.FIP || {};
 
 /*
 Namespace: FIP.vars
 	Shared global variables
 */
 FIP.vars = {
+	namespace : "fip",
 	typography : ["font-size", "font-weight", "font-style", "line-height", "text-transform"],
 	popoverHTML : '<div class="fip-popover fip-device-scale"><ul><li>Prev</li><li>Next</li></ul></div>'
 };
@@ -48,6 +49,10 @@ FIP.utils = {
 	*/
 	queue : function (object) {
 		object();
+	},
+	
+	createClassName : function() {
+		return [FIP.vars.namespace, Array.prototype.slice.call(arguments).join("-")].join("-");
 	},
 	
 	/*
