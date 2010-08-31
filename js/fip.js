@@ -31,7 +31,8 @@ Namespace: FIP.vars
 FIP.vars = {
 	namespace : "fip",
 	typography : ["font-size", "font-weight", "font-style", "line-height", "text-transform"],
-	popoverHTML : '<div class="fip-popover fip-device-scale"><ul><li>Prev</li><li>Next</li></ul></div>'
+	popoverHTML : '<div class="fip-device-scale"><div class="fip-popover"><ul><li>Prev</li><li>Next</li></ul></div></div>',
+	searchBarHTML : '<div class="fip-search"><div class="fip-device-scale"><form action="#"><fieldset><input type="search" value="" placeholder="Search Page" /><input type="reset" value="Cancel" /></fieldset></form></div></div>'
 };
 
 /*
@@ -182,13 +183,99 @@ FIP.utils = {
 		 	&& !skip) {
 			return true;
 		}
-	},
+	}
+};
+
+
+FIP.utils.watchScale = function() {
+	var hasTouchSupport = "createTouch" in document;
+
+
+	var headElement	 = document.getElementsByTagName("head")[0];
+	var styleElement = document.createElement("style");
+
+	styleElement.setAttribute("type", "text/css");
+	headElement.appendChild(styleElement);
+
+	var stylesheet = styleElement.sheet;
+
+	window.addEventListener("scroll", updateDeviceScaleStyle, false);
+	window.addEventListener("resize", updateDeviceScaleStyle, false);
+	updateDeviceScaleStyle();
+
+	function updateDeviceScaleStyle() {
+		if (stylesheet.rules.length) {
+			stylesheet.deleteRule(0);
+		}
+
+		stylesheet.insertRule(
+			".fip-device-scale {-webkit-transform:translate3d(0, 0, 0) scale(" + getDeviceScale() + ")}", 0
+		);
+	}
+
+	stylesheet.insertRule(
+		".fip-device-scale {-webkit-backface-visibility: hidden; -webkit-transform-origin: 0 0;}", 1
+	);
+
+	function getDeviceScale() {
+		var deviceWidth, landscape = Math.abs(window.orientation) == 90;
+
+		if (landscape) {
+			deviceWidth = Math.max(480, screen.height);
+		} else {
+			deviceWidth = screen.width;
+		}
+
+		return window.innerWidth / deviceWidth;
+	}
+};
+
+FIP.utils.injectPopover = function(result) {
+	var names = {
+		popover : FIP.utils.createClassName("popover")
+	};
+
+	result.innerHTML += FIP.vars.popoverHTML;
+	var popover = result.querySelector("." + names.popover);
+
+	popover.querySelector("li:first-child").addEventListener("touchend", function() {
+		var element = popover.parentNode.previousSibling;
+
+		while (element && element.resultType !== 1) {
+			element = element.previousSibling;
+		}
+
+		if (!element) {
+			element = document.querySelector("." + names.results + " ." + names.result + ":last-child");
+		}
+
+		FIP.utils.makeResultActive(element);
+	}, false);
+
+	popover.querySelector("li:last-child").addEventListener("touchend", function() {
+		var element = popover.parentNode.nextSibling;
+
+		while (element && element.resultType !== 1) {
+			element = element.nextSibling;
+		}
+
+		if (!element) {
+			element = document.querySelector("." + names.results + " ." + names.result + ":first-child");
+		}
+
+		FIP.utils.makeResultActive(element);
+	}, false);
+
+	return popover;
 };
 
 FIP.utils.makeResultActive = function(result) {
+	if (!FIP.vars.popover) {
+		FIP.vars.popover = FIP.utils.injectPopover(result);
+	}
+
 	var names = {
 		active : FIP.utils.createClassName("active-result"),
-		popover : FIP.utils.createClassName("popover"),
 		result : FIP.utils.createClassName("result"),
 		results : FIP.utils.createClassName("search-results")
 	};
@@ -201,40 +288,7 @@ FIP.utils.makeResultActive = function(result) {
 
 	FIP.utils.addClass(result, names.active);
 
-	if (!FIP.vars.popover) {
-		result.innerHTML += FIP.vars.popoverHTML;
-		FIP.vars.popover = result.querySelector("." + names.popover);
-
-		FIP.vars.popover.querySelector("li:first-child").addEventListener("touchend", function() {
-			var element = FIP.vars.popover.parentNode.previousSibling;
-
-			while (element && element.resultType !== 1) {
-				element = element.previousSibling;
-			}
-
-			if (!element) {
-				element = document.querySelector("." + names.results + " ." + names.result + ":last-child");
-			}
-
-			FIP.utils.makeResultActive(element);
-		}, false);
-
-		FIP.vars.popover.querySelector("li:last-child").addEventListener("touchend", function() {
-			var element = FIP.vars.popover.parentNode.nextSibling;
-
-			while (element && element.resultType !== 1) {
-				element = element.nextSibling;
-			}
-
-			if (!element) {
-				element = document.querySelector("." + names.results + " ." + names.result + ":first-child");
-			}
-
-			FIP.utils.makeResultActive(element);
-		}, false);
-	} else {
-		result.appendChild(FIP.vars.popover);
-	}
+	result.appendChild(FIP.vars.popover);
 
 	var left = (result.offsetLeft + (result.offsetWidth / 2)) - (window.innerWidth / 2),
 	    top = (result.offsetTop + (result.offsetHeight / 2)) - (window.innerHeight / 2);
@@ -278,60 +332,38 @@ FIP.utils.cloneResult = function(result) {
 	parent.appendChild(clone);
 };
 
+FIP.utils.injectSearch = function() {
+	document.body.innerHTML += FIP.vars.searchBarHTML;
+	return document.querySelector("." + FIP.utils.createClassName("search"));
+};
 
-FIP.utils.watchScale = function() {
-	var names = {
-		scale : FIP.utils.createClassName("device-scale")
-	};
-
-	var hasTouchSupport = "createTouch" in document;
-	if (!hasTouchSupport || FIP.vars.scaleBeingWatched) {
-		return;
+FIP.utils.initSearchBar = function() {
+	if (!FIP.vars.searchBar) {
+		FIP.vars.searchBar = FIP.utils.injectSearch();
 	}
 
-	FIP.vars.scaleBeingWatched = true;
+	var searchBar = FIP.vars.searchBar,
+	    searchForm = searchBar.querySelector("form"),
+	    transform = window.getComputedStyle(searchBar, null).webkitTransform,
+	    matrix = new WebKitCSSMatrix(transform);
 
-	var headElement	 = document.getElementsByTagName("head")[0];
-	var styleElement = document.createElement("style");
-
-	var stylesheet = styleElement.sheet;
-
-	function updateDeviceScaleStyle() {
-		if (stylesheet.rules.length) {
-			stylesheet.deleteRule(0);
-		}
-
-		stylesheet.insertRule(
-			"." + names.scale + " {-webkit-transform:scale(" + getDeviceScale() + ")}", 0
-		);
+	function updatePosition() {
+		searchBar.style.webkitTransform = matrix.translate(window.scrollX, window.scrollY, 0);
 	}
 
-	function getDeviceScale() {
-		var deviceWidth, landscape = Math.abs(window.orientation) == 90;
+	window.addEventListener("scroll", updatePosition, false);
 
-		if (landscape) {
-			deviceWidth = Math.max(480, screen.height);
-		} else {
-			deviceWidth = screen.width;
-		}
+	searchForm.addEventListener("submit", function(e) {
+		e.preventDefault();
 
-		return window.innerWidth / deviceWidth;
-	}
+		var term = this.querySelector("input").value;
+		var search = new FIP.Search(term);
+	}, false);
 
-	styleElement.setAttribute("type", "text/css");
-	headElement.appendChild(styleElement);
-
-	updateDeviceScaleStyle();
-
-	window.addEventListener("scroll", updateDeviceScaleStyle, false);
-	window.addEventListener("resize", updateDeviceScaleStyle, false);
-	window.addEventListener("load", updateDeviceScaleStyle, false);
+	updatePosition();
 };
 
 FIP.Search = function (needle) {
-
-	FIP.utils.watchScale();
-
 	if (!needle) {
 		throw("Error: Nice try. No searching for empty strings. Go stare into the void on your own dime.");
 	} else if (typeof needle !== "string") {
@@ -394,5 +426,5 @@ FIP.Search = function (needle) {
 	}
 };
 
-var term = document.documentElement.getAttribute("data-search-term");
-var search = new FIP.Search(term);
+FIP.utils.watchScale();
+FIP.utils.initSearchBar();
