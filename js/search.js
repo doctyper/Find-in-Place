@@ -29,12 +29,18 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (l < 1) {
 			throw("Warning: Couldn't find the search term anywhere. Tried really hard.")
 		}
+		
+		// console.log(l + (l > 1 ? " textNodes contain matches" : " textNode contains a match"));
 
 		// check inside the resulting text nodes for as many matches as possible,
 		// wrapping each result in span.fip-result.fip-inline-result
 		for (i = 0; i < l; i++) {
 			textNode = snapshot.snapshotItem(i);
 			parent = textNode.parentNode;
+			
+			if (parent.isHidden()) {
+				continue;
+			}
 
 			while (textNode && (match = caseInsensitiveNeedle.exec(textNode.data)) !== null) {
 				// console.log("Found " + match[0] + " at " + match.index + " in \"" + textNode.data + "\".");

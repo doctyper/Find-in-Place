@@ -39,9 +39,11 @@
 				margin-bottom: 1em;
 				font-size: 1em;
 			}
+			
 		</style>
 	</head>
 	<body>
+		<!-- Visible Elements -->
 		<h2>Lorem ipsum dolor sit amet</h2>
 		<p>Lorem ipsum dolor sit amet, <a href="#">consectetur adipiscing elit</a>. Vestibulum facilisis nisi et nunc mattis <em>posuere hendrerit eros lacinia. Suspendisse potenti</em>. Quisque elit massa, semper non lacinia ut, ultricies in mauris. Maecenas feugiat ultricies massa, quis tristique urna condimentum sit amet. Fusce at sapien quis justo tincidunt dapibus. Ut lacus risus, mattis mollis iaculis quis, tempus a neque. <a href"#">Morbi placerat ornare dui eu dignissim</a>. Nunc ac blandit urna. Maecenas scelerisque congue eros in ultrices. Nulla ut quam eu libero mollis hendrerit. Morbi vestibulum ullamcorper blandit. Suspendisse potenti. Ut eu ante erat, posuere bibendum libero. Sed sagittis, sapien eu feugiat malesuada, <strong>velit velit congue tellus</strong>, mattis hendrerit mauris eros eu purus. Donec varius volutpat diam bibendum pellentesque. Sed nisi mi, dignissim at elementum et, ullamcorper non dui. Nulla facilisi. Integer non lorem metus, ut sagittis orci. Cras varius nulla et tellus placerat ultricies. Aenean bibendum tristique lectus, sed venenatis enim tristique quis.</p>
 		
@@ -57,6 +59,23 @@
 		<h3>Lorem ipsum dolor sit amet</h3>
 		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Sed ultrices condimentum auctor. Maecenas placerat tempor euismod</strong>. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Maecenas molestie tempor est, ut condimentum elit hendrerit eget. Vivamus posuere scelerisque turpis, at tempus libero suscipit ac. <em>Mauris tincidunt posuere posuere</em>. Donec sed nisi a purus lobortis mollis. Morbi quis lacinia eros. Nulla tincidunt mauris nulla. In rhoncus commodo felis at volutpat. Donec vitae varius magna. Vestibulum in augue leo. Donec et sem nec augue porta venenatis.</p>
 		
+		<!-- 
+			Invisible Elements:
+			- display: none
+			- visibility: hidden
+		-->
+		<ul>
+			<!-- display: none; -->
+			<li style="display:none;">ipsum</li>
+			<!-- nested inside display: none; -->
+			<li style="display:none;">lorem <em>ipsum dolor</em></li>
+
+			<!-- visibility: hidden; -->
+			<li style="visibility: hidden;">ipsum</li>
+			<!-- nested visibility: hidden; This "ipsum" should display. -->
+			<li style="visibility: hidden;">lorem <em style="visibility: visible;">ipsum dolor</em></li>
+		</ul>
+
 		<div class="fip-search fip-device-scale">
 			<form action="#">
 				<fieldset>
