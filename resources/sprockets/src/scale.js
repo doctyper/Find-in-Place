@@ -25,31 +25,38 @@
 // THE SOFTWARE.
 
 FIP.utils.watchScale = function() {
-	var names = {
-		scale : FIP.utils.createClassName("device-scale")
-	};
-	
 	var hasTouchSupport = "createTouch" in document;
-	if (!hasTouchSupport || FIP.vars.scaleBeingWatched) {
-		return;
-	}
 	
-	FIP.vars.scaleBeingWatched = true;
+	// if (!hasTouchSupport) {
+	// 	return;
+	// }
 
 	var headElement	 = document.getElementsByTagName("head")[0];
 	var styleElement = document.createElement("style");
 
+	styleElement.setAttribute("type", "text/css");
+	headElement.appendChild(styleElement);
+
 	var stylesheet = styleElement.sheet;
-	
+
+	window.addEventListener("scroll", updateDeviceScaleStyle, false);
+	window.addEventListener("resize", updateDeviceScaleStyle, false);
+	// window.addEventListener("load",		updateDeviceScaleStyle, false);
+	updateDeviceScaleStyle();
+
 	function updateDeviceScaleStyle() {
 		if (stylesheet.rules.length) {
 			stylesheet.deleteRule(0);
 		}
 
 		stylesheet.insertRule(
-			"." + names.scale + " {-webkit-transform:scale(" + getDeviceScale() + ")}", 0
+			".fip-device-scale {-webkit-transform:translate3d(0, 0, 0) scale(" + getDeviceScale() + ")}", 0
 		);
 	}
+
+	stylesheet.insertRule(
+		".fip-device-scale {-webkit-backface-visibility: hidden; -webkit-transform-origin: 0 0;}", 1
+	);
 
 	// Adapted from code by Mislav Marohnić: http://gist.github.com/355625
 	function getDeviceScale() {
@@ -64,13 +71,4 @@ FIP.utils.watchScale = function() {
 
 		return window.innerWidth / deviceWidth;
 	}
-
-	styleElement.setAttribute("type", "text/css");
-	headElement.appendChild(styleElement);
-
-	updateDeviceScaleStyle();
-	
-	window.addEventListener("scroll", updateDeviceScaleStyle, false);
-	window.addEventListener("resize", updateDeviceScaleStyle, false);
-	window.addEventListener("load", updateDeviceScaleStyle, false);
 };
