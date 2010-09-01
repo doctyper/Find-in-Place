@@ -31,8 +31,8 @@ Namespace: FIP.vars
 FIP.vars = {
 	namespace : "fip",
 	typography : ["font-size", "font-weight", "font-style", "line-height", "text-transform"],
-	popoverHTML : '<div class="fip-device-scale"><div class="fip-popover"><ul><li>Prev</li><li>Next</li></ul></div></div>',
-	searchBarHTML : '<div class="fip-search"><div class="fip-device-scale"><form action="#"><fieldset><input type="search" value="" placeholder="Search Page" /><input type="reset" value="Cancel" /></fieldset></form></div></div>'
+	popoverHTML : '<div class="fip-popover"><div class="fip-device-scale"><ul><li>Prev</li><li>Next</li></ul></div></div>',
+	searchBarHTML : '<div class="fip-search"><form action="#"><fieldset><input type="search" value="" placeholder="Search Page" /><span></span></fieldset><fieldset><input type="reset" value="Cancel" /></fieldset></form></div>'
 };
 
 /*
@@ -232,16 +232,20 @@ FIP.utils.watchScale = function() {
 
 FIP.utils.injectPopover = function(result) {
 	var names = {
-		popover : FIP.utils.createClassName("popover")
+		popover : FIP.utils.createClassName("popover"),
+		result : FIP.utils.createClassName("result"),
+		results : FIP.utils.createClassName("search-results")
 	};
 
 	result.innerHTML += FIP.vars.popoverHTML;
 	var popover = result.querySelector("." + names.popover);
 
-	popover.querySelector("li:first-child").addEventListener("touchend", function() {
+	popover.querySelector("li:first-child").addEventListener("touchend", function(e) {
+		e.preventDefault();
+
 		var element = popover.parentNode.previousSibling;
 
-		while (element && element.resultType !== 1) {
+		while (element && element.nodeType !== 1) {
 			element = element.previousSibling;
 		}
 
@@ -252,10 +256,12 @@ FIP.utils.injectPopover = function(result) {
 		FIP.utils.makeResultActive(element);
 	}, false);
 
-	popover.querySelector("li:last-child").addEventListener("touchend", function() {
+	popover.querySelector("li:last-child").addEventListener("touchend", function(e) {
+		e.preventDefault();
+
 		var element = popover.parentNode.nextSibling;
 
-		while (element && element.resultType !== 1) {
+		while (element && element.nodeType !== 1) {
 			element = element.nextSibling;
 		}
 
@@ -344,23 +350,87 @@ FIP.utils.initSearchBar = function() {
 
 	var searchBar = FIP.vars.searchBar,
 	    searchForm = searchBar.querySelector("form"),
+	    searchInput = searchForm.querySelector("input:first-child"),
+	    searchCancel = searchForm.querySelector("input:last-child"),
+	    searchCover = searchForm.querySelector("span"),
+	    firedAttribute = "data-touchmove-fired",
 	    transform = window.getComputedStyle(searchBar, null).webkitTransform,
 	    matrix = new WebKitCSSMatrix(transform);
 
-	function updatePosition() {
-		searchBar.style.webkitTransform = matrix.translate(window.scrollX, window.scrollY, 0);
+	FIP.utils.removeClass(searchBar, FIP.utils.createClassName("hidden"));
+
+	function updatePosition(focus) {
+		searchBar.style.setProperty("width", Math.max(window.innerWidth, document.body.clientWidth) + "px");
+		searchBar.style.setProperty("height", Math.max(window.innerHeight, document.body.clientHeight) + "px");
+
+		if (!focus) {
+			searchForm.style.setProperty("width", (window.innerWidth * 0.8) + "px");
+			searchForm.style.setProperty("-webkit-transform", matrix.translate(Math.round(window.scrollX + (window.innerWidth / 2) - (searchForm.offsetWidth / 2)), Math.round(window.scrollY + (window.innerHeight / 2) - (searchForm.offsetHeight * 1.5)), 0));
+		}
 	}
 
-	window.addEventListener("scroll", updatePosition, false);
+	function preventDefault(e) {
+		var target = e.target,
+		    parent;
+
+		while (target && target.parentNode) {
+			if (target === searchBar) {
+				parent = target;
+			}
+			target = target.parentNode;
+		}
+
+		if (parent) {
+			e.preventDefault();
+		}
+	}
+
+	document.addEventListener("touchmove", preventDefault, false);
+	document.addEventListener("touchend", preventDefault, false);
 
 	searchForm.addEventListener("submit", function(e) {
 		e.preventDefault();
 
-		var term = this.querySelector("input").value;
-		var search = new FIP.Search(term);
+		var input = this.querySelector("input"),
+		    term = input.value,
+		    search = new FIP.Search(term);
+
+		input.blur();
+		FIP.utils.addClass(searchBar, FIP.utils.createClassName("hidden"));
 	}, false);
 
-	updatePosition();
+	searchInput.addEventListener("focus", function(e) {
+		e.preventDefault();
+		updatePosition();
+	}, false);
+
+	searchCover.addEventListener("touchstart", function(e) {
+		this.removeAttribute(firedAttribute);
+	}, false);
+
+	searchCover.addEventListener("touchmove", function(e) {
+		this.setAttribute(firedAttribute, window.parseInt(this.getAttribute(firedAttribute) || "0") + 1);
+	}, false);
+
+	searchCover.addEventListener("touchend", function(e) {
+		if (!this.getAttribute(firedAttribute) || this.getAttribute(firedAttribute) < 5) {
+			this.parentNode.removeChild(this);
+		}
+
+		this.removeAttribute(firedAttribute);
+	}, false);
+
+	searchCover.addEventListener("mouseup", function(e) {
+		this.parentNode.removeChild(this);
+	}, false);
+
+	searchCancel.addEventListener("click", function() {
+		FIP.utils.addClass(searchBar, FIP.utils.createClassName("hidden"));
+	}, false);
+
+	window.setTimeout(function() {
+		updatePosition();
+	}, 50);
 };
 
 FIP.Search = function (needle) {

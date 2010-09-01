@@ -11,53 +11,76 @@
   top: 0;
   left: 0;
   position: absolute;
-  z-index: 10000;
-  -webkit-transform-origin: 0 0;
-  -webkit-transform: translate3d(0, 0, 0);
-  -webkit-transition: -webkit-transform 350ms ease-out;
-  -webkit-backface-visibility: hidden;
-}
-/* line 11, ../resources/sass/src/_search.scss */
-.fip-search form {
   width: 100%;
-  height: 43px;
-  border: solid;
-  border-width: 1px 0;
-  border-color: #ebeff1 transparent #91a0ab;
-  background: -webkit-gradient(linear, left top, left bottom, from(#dcdfe0), to(#abb7bf), color-stop(50%, #bfc8ce), color-stop(50%, #c4ccd1));
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+  z-index: 10000;
 }
-/* line 19, ../resources/sass/src/_search.scss */
+/* line 10, ../resources/sass/src/_search.scss */
+.fip-search.fip-hidden {
+  background: red !important;
+  display: none;
+}
+/* line 15, ../resources/sass/src/_search.scss */
+.fip-search form {
+  top: 0;
+  left: 0;
+  position: absolute;
+  text-align: right;
+  vertical-align: middle;
+}
+/* line 22, ../resources/sass/src/_search.scss */
 .fip-search form fieldset {
   margin: 0 5px;
-  text-align: right;
+  position: relative;
 }
-/* line 23, ../resources/sass/src/_search.scss */
+/* line 26, ../resources/sass/src/_search.scss */
+.fip-search form fieldset:first-child {
+  padding: 6px;
+  background: -webkit-gradient(linear, left top, left bottom, from(#2e7ac0), to(#14546b));
+  -webkit-border-radius: 6px;
+  -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+}
+/* line 32, ../resources/sass/src/_search.scss */
+.fip-search form fieldset:first-child span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+/* line 41, ../resources/sass/src/_search.scss */
+.fip-search form fieldset:last-child {
+  margin-top: 6px;
+  display: inline-block;
+}
+/* line 46, ../resources/sass/src/_search.scss */
 .fip-search form fieldset input {
   padding: 0;
-  margin-top: 6px;
   -webkit-appearance: none;
-  height: 28px;
-  border: none;
+  height: 34px;
+  border: 3px solid rgba(255, 255, 255, 0.5);
   font: 14px/28px "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-/* line 31, ../resources/sass/src/_search.scss */
+/* line 53, ../resources/sass/src/_search.scss */
 .fip-search form fieldset input[type="search"] {
-  margin-right: 5px;
-  width: 235px;
+  width: 100%;
   padding: 0 30px;
-  -webkit-border-radius: 14px;
+  -webkit-border-radius: 6px;
   -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+  background: white url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAYAAABy6+R8AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QTNENEJGMThBRDdFMTFERkI2MzhBMjk3MzYwMzVDOTUiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QTNENEJGMTlBRDdFMTFERkI2MzhBMjk3MzYwMzVDOTUiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpBM0Q0QkYxNkFEN0UxMURGQjYzOEEyOTczNjAzNUM5NSIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpBM0Q0QkYxN0FEN0UxMURGQjYzOEEyOTczNjAzNUM5NSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PudwJskAAAFlSURBVHjajJExq8IwFIWPpYI4SBEdhC7ODi4di4iKg4hjJwf/iJvgL3DwD0iRTsXJwU0o5S4iIg6CTi4OrTg4iL7cwCuv1uEdCOQm+XJyT1Lv9xus4/FIjuNgt9vh+XyiUqmg2+2iWq0a+FCKocViQbZt4/V6fe6j3W5jMBjEQHW/39NsNpNFp9NBs9lEOp2G7/uYz+dYLpfQdZ1arVYEKsIlAvr9vlEqlYxCoWCI2hAOcs913Zi7cjgc5IQdPlWv1w1VVXG9XhEEAW02G74YCjfN4id9E0Ms7leEAsuyoJTLZblIRAlgu93i8Xggl8shn8/Lnnq9HpRGoyEPcHrr9ToiRUCYTqdyXqvVkpFPJhMSgFzIZDLySff7PTqkaRqGwyE4pAhirVYr+bmiYVlns1mYpgnP83C73WJgBP3qcrkQOxWLRXnr+Xym8XgcAxPQN/0FOUEw9J9xOp1oNBpRGIb0I8AAoKLDqGWq6xcAAAAASUVORK5CYII=') no-repeat 8px center;
 }
-/* line 39, ../resources/sass/src/_search.scss */
+/* line 61, ../resources/sass/src/_search.scss */
 .fip-search form fieldset input[type="reset"] {
   font-size: 12px;
   font-weight: bold;
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
-  background: -webkit-gradient(linear, left top, left bottom, from(#8f99a8), to(#6a7d97), color-stop(50%, #7c8da4), color-stop(50%, #71839c));
+  background: -webkit-gradient(linear, left top, left bottom, from(#2e7ac0), to(#14546b));
   -webkit-border-radius: 4px;
   border: 1px solid;
   border-color: #4d5157 #5c6a7d #637185;
+  -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
 }
 
 @-webkit-keyframes fip-result {
