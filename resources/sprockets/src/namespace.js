@@ -31,8 +31,8 @@ Namespace: FIP.vars
 FIP.vars = {
 	namespace : "fip",
 	typography : ["font-size", "font-weight", "font-style", "line-height", "text-transform"],
-	popoverHTML : '<div class="fip-device-scale"><div class="fip-popover"><ul><li>Prev</li><li>Next</li></ul></div></div>',
-	searchBarHTML : '<div class="fip-search"><div class="fip-device-scale"><form action="#"><fieldset><input type="search" value="" placeholder="Search Page" /><input type="reset" value="Cancel" /></fieldset></form></div></div>'
+	popoverHTML : '<div class="fip-popover"><div class="fip-device-scale"><ul><li>Prev</li><li>Next</li></ul></div></div>',
+	searchBarHTML : '<div class="fip-search"><form action="#"><fieldset><input type="search" value="" placeholder="Search Page" /><span></span></fieldset><fieldset><input type="reset" value="Cancel" /></fieldset></form></div>'
 };
 
 /*
