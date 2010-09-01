@@ -15,7 +15,6 @@ FIP.utils.initSearchBar = function() {
 	    searchInput = searchForm.querySelector("input:first-child"),
 	    searchCancel = searchForm.querySelector("input:last-child"),
 	    searchCover = searchForm.querySelector("span"),
-	    firedAttribute = "data-touchmove-fired",
 	    transform = window.getComputedStyle(searchBar, null).webkitTransform,
 	    matrix = new WebKitCSSMatrix(transform);
 	
@@ -47,8 +46,8 @@ FIP.utils.initSearchBar = function() {
 		}
 	}
 	
-	document.addEventListener("touchmove", preventDefault, false);
-	document.addEventListener("touchend", preventDefault, false);
+	document.addEventListener(FIP.vars.touchmove, preventDefault, false);
+	document.addEventListener(FIP.vars.touchend, preventDefault, false);
 	
 	searchForm.addEventListener("submit", function(e) {
 		e.preventDefault();
@@ -61,34 +60,32 @@ FIP.utils.initSearchBar = function() {
 		FIP.utils.addClass(searchBar, FIP.utils.createClassName("hidden"));
 	}, false);
 	
-	searchInput.addEventListener("focus", function(e) {
-		e.preventDefault();
-		updatePosition();
-	}, false);
-	
-	searchCover.addEventListener("touchstart", function(e) {
-		this.removeAttribute(firedAttribute);
-	}, false);
-	
-	searchCover.addEventListener("touchmove", function(e) {
-		this.setAttribute(firedAttribute, window.parseInt(this.getAttribute(firedAttribute) || "0") + 1);
-	}, false);
-	
-	searchCover.addEventListener("touchend", function(e) {
-		if (!this.getAttribute(firedAttribute) || this.getAttribute(firedAttribute) < 5) {
-			this.parentNode.removeChild(this);
-		}
+	var inputEvents = {
+		focus : function(e) {
+			e.preventDefault();
+			updatePosition();
+		},
 		
-		this.removeAttribute(firedAttribute);
-	}, false);
+		blur : function() {
+			searchCover = document.createElement("span");
+			this.parentNode.appendChild(searchCover);
+		}
+	};
 	
-	searchCover.addEventListener("mouseup", function(e) {
-		this.parentNode.removeChild(this);
-	}, false);
+	for (var key in inputEvents) {
+		searchInput.addEventListener(key, inputEvents[key], false);
+	}
 	
-	searchCancel.addEventListener("click", function() {
+	FIP.utils.addTapListener(searchCover.parentNode, function(e) {
+		if (e.target === searchCover) {
+			searchInput.focus();
+			this.removeChild(searchCover);
+		}
+	});
+	
+	FIP.utils.addTapListener(searchCancel, function() {
 		FIP.utils.addClass(searchBar, FIP.utils.createClassName("hidden"));
-	}, false);
+	});
 	
 	// Initialize
 	window.setTimeout(function() {

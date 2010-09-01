@@ -186,5 +186,40 @@ FIP.utils = {
 		 	&& !skip) {
 			return true;
 		}
-	}
+	},
+	
+	addTapListener : function(node, handler) {
+		
+		var firedAttribute = "data-touchmove-fired";
+		
+		var events = {
+			touchstart : function(e) {
+				this.removeAttribute(firedAttribute);
+			},
+			touchmove : function(e) {
+				this.setAttribute(firedAttribute, window.parseInt(this.getAttribute(firedAttribute) || "0") + 1);
+			},
+			touchend : function(e) {
+				if (!this.getAttribute(firedAttribute) || this.getAttribute(firedAttribute) < 5) {
+					// Do stuff
+					handler.call(this, e);
+				}
+
+				this.removeAttribute(firedAttribute);
+			}
+		};
+		
+		for (var key in events) {
+			node.addEventListener(FIP.vars[key], events[key], false);
+		}
+
+	},
+	
+	touchEvents : function() {
+		var hasTouchSupport = "createTouch" in document;
+		
+		FIP.vars.touchstart = hasTouchSupport ? "touchstart" : "mousedown";
+		FIP.vars.touchmove = hasTouchSupport ? "touchmove" : "mousemove";
+		FIP.vars.touchend = hasTouchSupport ? "touchend" : "mouseup";
+	}()
 };

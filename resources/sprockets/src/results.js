@@ -8,9 +8,12 @@ FIP.utils.injectPopover = function(result) {
 	};
 	
 	result.innerHTML += FIP.vars.popoverHTML;
-	var popover = result.querySelector("." + names.popover);
 	
-	popover.querySelector("li:first-child").addEventListener("touchend", function(e) {
+	var popover = result.querySelector("." + names.popover),
+	    prev = popover.querySelector("li:first-child"),
+	    next = popover.querySelector("li:last-child");
+	
+	FIP.utils.addTapListener(prev, function(e) {
 		e.preventDefault();
 		
 		var element = popover.parentNode.previousSibling;
@@ -24,9 +27,9 @@ FIP.utils.injectPopover = function(result) {
 		}
 		
 		FIP.utils.makeResultActive(element);
-	}, false);
+	});
 	
-	popover.querySelector("li:last-child").addEventListener("touchend", function(e) {
+	FIP.utils.addTapListener(next, function(e) {
 		e.preventDefault();
 		
 		var element = popover.parentNode.nextSibling;
@@ -40,7 +43,7 @@ FIP.utils.injectPopover = function(result) {
 		}
 		
 		FIP.utils.makeResultActive(element);
-	}, false);
+	});
 	
 	return popover;
 };
