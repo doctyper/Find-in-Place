@@ -2,16 +2,20 @@
 
 FIP.utils.injectPopover = function(result) {
 	var names = {
-		popover : FIP.utils.createClassName("popover")
+		popover : FIP.utils.createClassName("popover"),
+		result : FIP.utils.createClassName("result"),
+		results : FIP.utils.createClassName("search-results")
 	};
 	
 	result.innerHTML += FIP.vars.popoverHTML;
 	var popover = result.querySelector("." + names.popover);
 	
-	popover.querySelector("li:first-child").addEventListener("touchend", function() {
+	popover.querySelector("li:first-child").addEventListener("touchend", function(e) {
+		e.preventDefault();
+		
 		var element = popover.parentNode.previousSibling;
 		
-		while (element && element.resultType !== 1) {
+		while (element && element.nodeType !== 1) {
 			element = element.previousSibling;
 		}
 		
@@ -22,10 +26,12 @@ FIP.utils.injectPopover = function(result) {
 		FIP.utils.makeResultActive(element);
 	}, false);
 	
-	popover.querySelector("li:last-child").addEventListener("touchend", function() {
+	popover.querySelector("li:last-child").addEventListener("touchend", function(e) {
+		e.preventDefault();
+		
 		var element = popover.parentNode.nextSibling;
 		
-		while (element && element.resultType !== 1) {
+		while (element && element.nodeType !== 1) {
 			element = element.nextSibling;
 		}
 		
