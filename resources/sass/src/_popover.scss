@@ -11,8 +11,14 @@
 	pointer-events: auto;
 	-webkit-transform-origin: 0 0;
 	
+	/* Disable Loupe */
+	-webkit-user-select: none;
+	
 	* {
 		display: inline-block;
+	
+		/* Disable Loupe */
+		-webkit-user-select: none;
 	}
 
 	ul {
