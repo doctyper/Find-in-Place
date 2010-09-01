@@ -30,45 +30,110 @@ FIP.Search = function (needle) {
 		l = snapshot.snapshotLength,
 		textNode, text, match, i, span, beginOffset, endOffset, parent;
 
-	if (l < 1) {
+
+	
+	var needleArr = needle.split(""),
+	    construct = "", iterSnapshot,
+	    positiveMatches = [],
+	    possibleFalseNegativeMatches = [],
+	    falseNegativeMatches = [];
+	
+	for (i = 0; i < l; i++) {
+		positiveMatches.push(snapshot.snapshotItem(i));
+	}
+	
+	for (var i = 0, j = needleArr.length; i < j; i++) {
+		construct += needleArr[i];
+		
+		iterSnapshot = d.evaluate(
+			"//text()[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + construct.toLowerCase() + "')]",
+			d.body,
+			null,
+			XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+			null);
+		
+		if (iterSnapshot.snapshotLength) {
+			for (var k = 0, l = iterSnapshot.snapshotLength; k < l; k++) {
+				var node = iterSnapshot.snapshotItem(k),
+				    boundaryMatch = new RegExp(construct + "$", "i").exec(node.data),
+				    nextSibling = node.nextSibling;
+				
+				if (boundaryMatch && nextSibling) {
+					possibleFalseNegativeMatches.push({
+						node : node,
+						data : node.data,
+						parentNode : node.parentNode,
+						charAt : construct.length,
+						construct : construct,
+						term : needle,
+						sibling : nextSibling
+					});
+				}
+			}
+		}
+		
+	}
+	
+	possibleFalseNegativeMatches.forEach(function(item, i) {
+		var sibText = item.sibling.firstChild.nodeValue;
+		var remainderMatch = new RegExp("^" + item.term.slice(item.charAt), "i").exec(sibText);
+		
+		if (remainderMatch) {
+			item.remainder = remainderMatch[0];
+			falseNegativeMatches.push(item);
+			
+			for (var key in item) {
+				item.node[key] = item[key];
+			}
+		}
+	});
+	
+	positiveMatches = positiveMatches.concat(falseNegativeMatches);
+
+	if (positiveMatches < 1) {
 		throw("Warning: Couldn't find the search term anywhere. Tried really hard.")
 	}
 
-	// console.log(l + (l > 1 ? " textNodes contain matches" : " textNode contains a match"));
-
 	// check inside the resulting text nodes for as many matches as possible,
 	// wrapping each result in span.fip-result.fip-inline-result
-	for (i = 0; i < l; i++) {
-		textNode = snapshot.snapshotItem(i);
+	for (i = 0; i < positiveMatches.length; i++) {
+		textNode = positiveMatches[i];
+		
 		parent = textNode.parentNode;
 
 		if (FIP.utils.isHidden(parent)) {
 			continue;
 		}
-
-		while (textNode && (match = caseInsensitiveNeedle.exec(textNode.data)) !== null) {
-			// console.log("Found " + match[0] + " at " + match.index + " in \"" + textNode.data + "\".");
+		
+		while (textNode && (match = caseInsensitiveNeedle.exec(textNode.data + (textNode.remainder || ""))) !== null) {
 
 			text = textNode.data;
 			beginOffset = match.index;
 			endOffset = beginOffset + needleLength;
 
 			if (text.length > endOffset) {
-				textNode.splitText(endOffset);
+				if (textNode.splitText) {
+					textNode.splitText(endOffset);
+				} else {
+					textNode.node.splitText(endOffset);
+				}
 			}
 
 			if (beginOffset !== 0) {
-				textNode.splitText(beginOffset);
-				textNode = textNode.nextSibling;
+				if (textNode.splitText) {
+					textNode.splitText(beginOffset);
+					textNode = textNode.nextSibling;
+				} else {
+					textNode.node.splitText(beginOffset);
+					textNode = textNode.node.nextSibling;
+				}
 			}
 
 			span = d.createElement("span");
-			parent.replaceChild(span, textNode);
-			span.appendChild(textNode);
+			
+			parent.replaceChild(span, (textNode.node || textNode));
+			span.appendChild(textNode.node || textNode);
 			span.className = "fip-result fip-inline-result";
-
-			// console.log(span.nextSibling.data);
-			// console.log("================")
 
 			textNode = span.nextSibling;
 			
