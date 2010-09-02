@@ -26,7 +26,10 @@ FIP.utils.initSearchBar = function() {
 		
 		if (!focus) {
 			searchForm.style.setProperty("width", (window.innerWidth * 0.8) + "px");
-			searchForm.style.setProperty("-webkit-transform", matrix.translate(Math.round(window.scrollX + (window.innerWidth / 2) - (searchForm.offsetWidth / 2)), Math.round(window.scrollY + (window.innerHeight / 2) - (searchForm.offsetHeight * 1.5)), 0));
+			
+			var left = Math.round(window.scrollX + (window.innerWidth / 2) - (searchForm.offsetWidth / 2)),
+			    top = Math.round(window.scrollY + (window.innerHeight / 2) - (searchForm.offsetHeight * 1.5));
+			searchForm.style.setProperty("-webkit-transform", matrix.translate(Math.max(left, 10), Math.max(top, 10), 0));
 		}
 	}
 	
@@ -48,6 +51,8 @@ FIP.utils.initSearchBar = function() {
 	
 	document.addEventListener(FIP.vars.touchmove, preventDefault, false);
 	document.addEventListener(FIP.vars.touchend, preventDefault, false);
+	
+	window.addEventListener("orientationchange", updatePosition, false);
 	
 	searchForm.addEventListener("submit", function(e) {
 		e.preventDefault();
