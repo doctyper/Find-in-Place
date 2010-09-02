@@ -10,8 +10,10 @@ FIP.utils.injectPopover = function(result) {
 	result.innerHTML += FIP.vars.popoverHTML;
 	
 	var popover = result.querySelector("." + names.popover),
-	    prev = popover.querySelector("li:first-child"),
-	    next = popover.querySelector("li:last-child");
+	    prev = popover.querySelector("li:nth-child(1)"),
+	    next = popover.querySelector("li:nth-child(2)"),
+	    search = popover.querySelector("li:nth-child(3)"),
+	    cancel = popover.querySelector("li:nth-child(4)");
 	
 	FIP.utils.addTapListener(prev, function(e) {
 		e.preventDefault();
