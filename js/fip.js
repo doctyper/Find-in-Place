@@ -31,7 +31,7 @@ Namespace: FIP.vars
 FIP.vars = {
 	namespace : "fip",
 	typography : ["font-size", "font-weight", "font-style", "line-height", "text-transform"],
-	popoverHTML : '<div class="fip-popover"><div class="fip-device-scale"><ul><li>Prev</li><li>Next</li></ul></div></div>',
+	popoverHTML : '<div class="fip-popover"><div class="fip-device-scale"><ul><li>Prev</li><li>Next</li><li>Search</li><li>Cancel</li></ul></div></div>',
 	searchBarHTML : '<div class="fip-search"><form action="#"><fieldset><input type="search" value="" placeholder="Search Page" /><span></span></fieldset><fieldset><input type="reset" value="Cancel" /></fieldset></form></div>'
 };
 
@@ -183,13 +183,50 @@ FIP.utils = {
 		 	&& !skip) {
 			return true;
 		}
-	}
+	},
+
+	addTapListener : function(node, handler) {
+
+		var firedAttribute = "data-touchmove-fired";
+
+		var events = {
+			touchstart : function(e) {
+				this.removeAttribute(firedAttribute);
+			},
+			touchmove : function(e) {
+				this.setAttribute(firedAttribute, window.parseInt(this.getAttribute(firedAttribute) || "0") + 1);
+			},
+			touchend : function(e) {
+				if (!this.getAttribute(firedAttribute) || this.getAttribute(firedAttribute) < 5) {
+					handler.call(this, e);
+				}
+
+				this.removeAttribute(firedAttribute);
+			}
+		};
+
+		for (var key in events) {
+			node.addEventListener(FIP.vars[key], events[key], false);
+		}
+
+	},
+
+	touchEvents : function() {
+		var hasTouchSupport = "createTouch" in document;
+
+		FIP.vars.touchstart = hasTouchSupport ? "touchstart" : "mousedown";
+		FIP.vars.touchmove = hasTouchSupport ? "touchmove" : "mousemove";
+		FIP.vars.touchend = hasTouchSupport ? "touchend" : "mouseup";
+	}()
 };
 
 
 FIP.utils.watchScale = function() {
 	var hasTouchSupport = "createTouch" in document;
 
+	if (!hasTouchSupport) {
+		return;
+	}
 
 	var headElement	 = document.getElementsByTagName("head")[0];
 	var styleElement = document.createElement("style");
@@ -238,9 +275,14 @@ FIP.utils.injectPopover = function(result) {
 	};
 
 	result.innerHTML += FIP.vars.popoverHTML;
-	var popover = result.querySelector("." + names.popover);
 
-	popover.querySelector("li:first-child").addEventListener("touchend", function(e) {
+	var popover = result.querySelector("." + names.popover),
+	    prev = popover.querySelector("li:nth-child(1)"),
+	    next = popover.querySelector("li:nth-child(2)"),
+	    search = popover.querySelector("li:nth-child(3)"),
+	    cancel = popover.querySelector("li:nth-child(4)");
+
+	FIP.utils.addTapListener(prev, function(e) {
 		e.preventDefault();
 
 		var element = popover.parentNode.previousSibling;
@@ -254,9 +296,9 @@ FIP.utils.injectPopover = function(result) {
 		}
 
 		FIP.utils.makeResultActive(element);
-	}, false);
+	});
 
-	popover.querySelector("li:last-child").addEventListener("touchend", function(e) {
+	FIP.utils.addTapListener(next, function(e) {
 		e.preventDefault();
 
 		var element = popover.parentNode.nextSibling;
@@ -270,7 +312,7 @@ FIP.utils.injectPopover = function(result) {
 		}
 
 		FIP.utils.makeResultActive(element);
-	}, false);
+	});
 
 	return popover;
 };
@@ -353,7 +395,6 @@ FIP.utils.initSearchBar = function() {
 	    searchInput = searchForm.querySelector("input:first-child"),
 	    searchCancel = searchForm.querySelector("input:last-child"),
 	    searchCover = searchForm.querySelector("span"),
-	    firedAttribute = "data-touchmove-fired",
 	    transform = window.getComputedStyle(searchBar, null).webkitTransform,
 	    matrix = new WebKitCSSMatrix(transform);
 
@@ -365,7 +406,10 @@ FIP.utils.initSearchBar = function() {
 
 		if (!focus) {
 			searchForm.style.setProperty("width", (window.innerWidth * 0.8) + "px");
-			searchForm.style.setProperty("-webkit-transform", matrix.translate(Math.round(window.scrollX + (window.innerWidth / 2) - (searchForm.offsetWidth / 2)), Math.round(window.scrollY + (window.innerHeight / 2) - (searchForm.offsetHeight * 1.5)), 0));
+
+			var left = Math.round(window.scrollX + (window.innerWidth / 2) - (searchForm.offsetWidth / 2)),
+			    top = Math.round(window.scrollY + (window.innerHeight / 2) - (searchForm.offsetHeight * 1.5));
+			searchForm.style.setProperty("-webkit-transform", matrix.translate(Math.max(left, 10), Math.max(top, 10), 0));
 		}
 	}
 
@@ -385,8 +429,10 @@ FIP.utils.initSearchBar = function() {
 		}
 	}
 
-	document.addEventListener("touchmove", preventDefault, false);
-	document.addEventListener("touchend", preventDefault, false);
+	document.addEventListener(FIP.vars.touchmove, preventDefault, false);
+	document.addEventListener(FIP.vars.touchend, preventDefault, false);
+
+	window.addEventListener("orientationchange", updatePosition, false);
 
 	searchForm.addEventListener("submit", function(e) {
 		e.preventDefault();
@@ -399,34 +445,32 @@ FIP.utils.initSearchBar = function() {
 		FIP.utils.addClass(searchBar, FIP.utils.createClassName("hidden"));
 	}, false);
 
-	searchInput.addEventListener("focus", function(e) {
-		e.preventDefault();
-		updatePosition();
-	}, false);
+	var inputEvents = {
+		focus : function(e) {
+			e.preventDefault();
+			updatePosition();
+		},
 
-	searchCover.addEventListener("touchstart", function(e) {
-		this.removeAttribute(firedAttribute);
-	}, false);
-
-	searchCover.addEventListener("touchmove", function(e) {
-		this.setAttribute(firedAttribute, window.parseInt(this.getAttribute(firedAttribute) || "0") + 1);
-	}, false);
-
-	searchCover.addEventListener("touchend", function(e) {
-		if (!this.getAttribute(firedAttribute) || this.getAttribute(firedAttribute) < 5) {
-			this.parentNode.removeChild(this);
+		blur : function() {
+			searchCover = document.createElement("span");
+			this.parentNode.appendChild(searchCover);
 		}
+	};
 
-		this.removeAttribute(firedAttribute);
-	}, false);
+	for (var key in inputEvents) {
+		searchInput.addEventListener(key, inputEvents[key], false);
+	}
 
-	searchCover.addEventListener("mouseup", function(e) {
-		this.parentNode.removeChild(this);
-	}, false);
+	FIP.utils.addTapListener(searchCover.parentNode, function(e) {
+		if (e.target === searchCover) {
+			searchInput.focus();
+			this.removeChild(searchCover);
+		}
+	});
 
-	searchCancel.addEventListener("click", function() {
+	FIP.utils.addTapListener(searchCancel, function() {
 		FIP.utils.addClass(searchBar, FIP.utils.createClassName("hidden"));
-	}, false);
+	});
 
 	window.setTimeout(function() {
 		updatePosition();
