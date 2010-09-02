@@ -27,9 +27,9 @@
 FIP.utils.watchScale = function() {
 	var hasTouchSupport = "createTouch" in document;
 	
-	// if (!hasTouchSupport) {
-	// 	return;
-	// }
+	if (!hasTouchSupport) {
+		return;
+	}
 
 	var headElement	 = document.getElementsByTagName("head")[0];
 	var styleElement = document.createElement("style");
@@ -41,7 +41,6 @@ FIP.utils.watchScale = function() {
 
 	window.addEventListener("scroll", updateDeviceScaleStyle, false);
 	window.addEventListener("resize", updateDeviceScaleStyle, false);
-	// window.addEventListener("load",		updateDeviceScaleStyle, false);
 	updateDeviceScaleStyle();
 
 	function updateDeviceScaleStyle() {
