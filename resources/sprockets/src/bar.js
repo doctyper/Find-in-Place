@@ -62,13 +62,25 @@ FIP.utils.initSearchBar = function() {
 		    search = new FIP.Search(term);
 		
 		input.blur();
-		FIP.utils.addClass(searchBar, FIP.utils.createClassName("hidden"));
+		
+		searchBar.style.removeProperty("width");
+		searchBar.style.removeProperty("height");
+		
+		this.style.removeProperty("width");
+		this.style.removeProperty("-webkit-transform");
 	}, false);
 	
 	var inputEvents = {
 		focus : function(e) {
 			e.preventDefault();
-			updatePosition();
+			e.stopPropagation();
+			
+			if (FIP.vars._searchTimeout) {
+				window.clearTimeout(FIP.vars._searchTimeout);
+				delete FIP.vars._searchTimeout;
+			} else {
+				updatePosition();
+			}
 		},
 		
 		blur : function() {
@@ -89,7 +101,7 @@ FIP.utils.initSearchBar = function() {
 	});
 	
 	FIP.utils.addTapListener(searchCancel, function() {
-		FIP.utils.addClass(searchBar, FIP.utils.createClassName("hidden"));
+		document.body.removeChild(document.querySelector("." + FIP.utils.createClassName("search-results")));
 	});
 	
 	// Initialize
