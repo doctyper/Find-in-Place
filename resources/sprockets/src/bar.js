@@ -56,6 +56,7 @@ FIP.utils.initSearchBar = function() {
 	
 	searchForm.addEventListener("submit", function(e) {
 		e.preventDefault();
+		FIP.utils.destroyResults();
 		
 		var input = this.querySelector("input"),
 		    term = input.value,
@@ -101,6 +102,7 @@ FIP.utils.initSearchBar = function() {
 	});
 	
 	FIP.utils.addTapListener(searchCancel, function() {
+		FIP.utils.destroyResults();
 		document.body.removeChild(document.querySelector("." + FIP.utils.createClassName("search-results")));
 	});
 	

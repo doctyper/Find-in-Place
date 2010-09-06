@@ -160,3 +160,15 @@ FIP.utils.storeTotalResults = function(total) {
 	var target = document.querySelector("." + names.popover + " ul:last-child li span:nth-child(2)");
 	target.setAttribute("data-total-results", total);
 };
+
+FIP.utils.destroyResults = function() {
+	var names = {
+		results : FIP.utils.createClassName("search-results")
+	};
+	
+	var results = document.querySelector("." + names.results);
+	
+	while (results && results.firstChild) {
+		results.removeChild(results.firstChild);
+	}
+};
