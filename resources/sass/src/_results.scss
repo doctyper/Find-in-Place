@@ -25,6 +25,7 @@
 	z-index: 9000;
 	background: rgba(0, 0, 0, 0.22);
 	pointer-events: none;
+	counter-reset: results;
 
 	.fip-result {
 		position: absolute;
@@ -39,6 +40,7 @@
 		-webkit-transform: translate3d(0, 0, 0) scale(1);
 		-webkit-backface-visibility: hidden;
 		-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+		counter-increment: results;
 	}
 
 	.fip-active-result {
