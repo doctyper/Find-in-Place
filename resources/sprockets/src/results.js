@@ -137,8 +137,8 @@ FIP.utils.buildResult = function(result) {
 		document.body.appendChild(parent);
 	}
 
-	clone.style.setProperty("left", box.left + "px");
-	clone.style.setProperty("top", box.top + "px");
+	clone.style.setProperty("left", (box.left + document.body.scrollLeft) + "px");
+	clone.style.setProperty("top", (box.top + document.body.scrollTop) + "px");
 
 	for (var k = 0, l = typography.length; k < l; k++) {
 		var typo = typography[k];
