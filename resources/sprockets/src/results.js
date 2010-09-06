@@ -116,7 +116,7 @@ FIP.utils.makeResultActive = function(result) {
 	window.scrollTo(left, top);
 };
 
-FIP.utils.cloneResult = function(result) {
+FIP.utils.buildResult = function(result) {
 	var names = {
 		results : FIP.utils.createClassName("search-results")
 	};

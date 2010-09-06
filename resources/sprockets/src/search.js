@@ -75,7 +75,7 @@ FIP.Search = function (needle) {
 
 			textNode = span.nextSibling;
 			
-			FIP.utils.cloneResult(span);
+			FIP.utils.buildResult(span);
 			total++;
 		}
 	}
