@@ -32,7 +32,7 @@ FIP.vars = {
 	namespace : "fip",
 	typography : ["font-size", "font-weight", "font-style", "line-height", "text-transform"],
 	popoverHTML : '<div class="fip-popover"><div class="fip-device-scale"><ul><li>Prev</li><li>Next</li></ul><ul><li>Match <span></span> of <span></span></li><li></li></ul></div></div>',
-	searchBarHTML : '<div class="fip-search"><form action="#"><fieldset><input type="search" value="" placeholder="Search Page" /><span></span></fieldset><fieldset><input type="reset" value="Cancel" /></fieldset></form></div>'
+	searchBarHTML : '<div class="fip-search"><form action="#"><fieldset><input type="search" value="" placeholder="Search Page" /><span></span></fieldset><fieldset><input type="reset" value="Close" /></fieldset></form></div>'
 };
 
 /*
@@ -383,7 +383,7 @@ FIP.utils.makeResultActive = function(result) {
 	window.scrollTo(left, top);
 };
 
-FIP.utils.cloneResult = function(result) {
+FIP.utils.buildResult = function(result) {
 	var names = {
 		results : FIP.utils.createClassName("search-results")
 	};
@@ -404,8 +404,8 @@ FIP.utils.cloneResult = function(result) {
 		document.body.appendChild(parent);
 	}
 
-	clone.style.setProperty("left", box.left + "px");
-	clone.style.setProperty("top", box.top + "px");
+	clone.style.setProperty("left", (box.left + document.body.scrollLeft) + "px");
+	clone.style.setProperty("top", (box.top + document.body.scrollTop) + "px");
 
 	for (var k = 0, l = typography.length; k < l; k++) {
 		var typo = typography[k];
@@ -426,6 +426,18 @@ FIP.utils.storeTotalResults = function(total) {
 
 	var target = document.querySelector("." + names.popover + " ul:last-child li span:nth-child(2)");
 	target.setAttribute("data-total-results", total);
+};
+
+FIP.utils.destroyResults = function() {
+	var names = {
+		results : FIP.utils.createClassName("search-results")
+	};
+
+	var results = document.querySelector("." + names.results);
+
+	while (results && results.firstChild) {
+		results.removeChild(results.firstChild);
+	}
 };
 
 FIP.utils.injectSearch = function() {
@@ -484,6 +496,7 @@ FIP.utils.initSearchBar = function() {
 
 	searchForm.addEventListener("submit", function(e) {
 		e.preventDefault();
+		FIP.utils.destroyResults();
 
 		var input = this.querySelector("input"),
 		    term = input.value,
@@ -529,6 +542,7 @@ FIP.utils.initSearchBar = function() {
 	});
 
 	FIP.utils.addTapListener(searchCancel, function() {
+		FIP.utils.destroyResults();
 		document.body.removeChild(document.querySelector("." + FIP.utils.createClassName("search-results")));
 	});
 
@@ -598,7 +612,7 @@ FIP.Search = function (needle) {
 
 			textNode = span.nextSibling;
 
-			FIP.utils.cloneResult(span);
+			FIP.utils.buildResult(span);
 			total++;
 		}
 	}
