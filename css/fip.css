@@ -79,6 +79,7 @@
 }
 /* line 65, ../resources/sass/src/_search.scss */
 .fip-search form fieldset input[type="reset"] {
+  padding: 0 6px;
   font-size: 12px;
   font-weight: bold;
   color: #fff;
@@ -88,6 +89,13 @@
   border: 1px solid;
   border-color: #4d5157 #5c6a7d #637185;
   -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+}
+
+@media only screen and (min-device-width: 481px) {
+  /* line 83, ../resources/sass/src/_search.scss */
+  .fip-search form fieldset input[type="search"] {
+    padding: 0 20px;
+  }
 }
 
 @-webkit-keyframes fip-result {

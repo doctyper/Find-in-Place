@@ -63,6 +63,7 @@
 				}
 
 				&[type="reset"] {
+					padding: 0 6px;
 					font-size: 12px;
 					font-weight: bold;
 					color: #fff;
@@ -75,5 +76,11 @@
 				}
 			}
 		}
+	}
+}
+
+@media only screen and (min-device-width: 481px) {
+	.fip-search form fieldset input[type="search"] {
+		padding: 0 20px;
 	}
 }
