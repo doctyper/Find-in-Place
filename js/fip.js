@@ -542,8 +542,12 @@ FIP.utils.initSearchBar = function() {
 	});
 
 	FIP.utils.addTapListener(searchCancel, function() {
-		FIP.utils.destroyResults();
-		document.body.removeChild(document.querySelector("." + FIP.utils.createClassName("search-results")));
+		var matches = document.querySelectorAll("*[class^='" + FIP.vars.namespace + "']");
+
+		for (var i = 0, j = matches.length; i < j; i++) {
+			var match = matches[i];
+			match.parentNode.removeChild(match);
+		}
 	});
 
 	window.setTimeout(function() {
