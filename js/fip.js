@@ -269,18 +269,23 @@ FIP.utils.watchScale = function() {
 
 FIP.utils.injectPopover = function(result) {
 	var names = {
+		search : FIP.utils.createClassName("search"),
 		popover : FIP.utils.createClassName("popover"),
 		result : FIP.utils.createClassName("result"),
-		results : FIP.utils.createClassName("search-results")
+		results : FIP.utils.createClassName("search-results"),
+		drawer : FIP.utils.createClassName("drawer"),
+		active : FIP.utils.createClassName("search-active"),
+		hover : FIP.utils.createClassName("hover")
 	};
 
 	result.innerHTML += FIP.vars.popoverHTML;
 
 	var popover = result.querySelector("." + names.popover),
-	    prev = popover.querySelector("li:nth-child(1)"),
-	    next = popover.querySelector("li:nth-child(2)"),
-	    search = popover.querySelector("li:nth-child(3)"),
-	    cancel = popover.querySelector("li:nth-child(4)");
+	    prev = popover.querySelector("ul:first-child li:first-child"),
+	    next = popover.querySelector("ul:first-child li:last-child"),
+	    search = popover.querySelector("ul:last-child");
+
+	search.querySelector("li:last-child").appendChild(document.querySelector("." + names.search));
 
 	FIP.utils.addTapListener(prev, function(e) {
 		e.preventDefault();
@@ -298,6 +303,22 @@ FIP.utils.injectPopover = function(result) {
 		FIP.utils.makeResultActive(element);
 	});
 
+	var hoverIn = function(e) {
+		e.preventDefault();
+		FIP.utils.addClass(this, names.hover);
+	};
+
+	var hoverOut = function(e) {
+		e.preventDefault();
+		FIP.utils.removeClass(this, names.hover);
+	};
+
+	prev.addEventListener(FIP.vars.touchstart, hoverIn, false);
+	prev.addEventListener(FIP.vars.touchend, hoverOut, false);
+
+	next.addEventListener(FIP.vars.touchstart, hoverIn, false);
+	next.addEventListener(FIP.vars.touchend, hoverOut, false);
+
 	FIP.utils.addTapListener(next, function(e) {
 		e.preventDefault();
 
@@ -313,6 +334,24 @@ FIP.utils.injectPopover = function(result) {
 
 		FIP.utils.makeResultActive(element);
 	});
+
+	FIP.utils.addTapListener(search, function(e) {
+		e.preventDefault();
+
+		FIP.utils.addClass(search, names.active);
+		FIP.utils.removeClass(search, names.drawer);
+
+		FIP.vars._searchTimeout = window.setTimeout(function() {
+			if (!document.querySelector("input:focus")) {
+				FIP.utils.removeClass(search, names.active);
+				FIP.utils.addClass(search, names.drawer);
+			}
+		}, 4000);
+	});
+
+	window.setTimeout(function() {
+		FIP.utils.addClass(search, names.drawer);
+	}, 500);
 
 	return popover;
 };
@@ -380,6 +419,15 @@ FIP.utils.cloneResult = function(result) {
 	parent.appendChild(clone);
 };
 
+FIP.utils.storeTotalResults = function(total) {
+	var names = {
+		popover : FIP.utils.createClassName("popover")
+	};
+
+	var target = document.querySelector("." + names.popover + " ul:last-child li span:nth-child(2)");
+	target.setAttribute("data-total-results", total);
+};
+
 FIP.utils.injectSearch = function() {
 	document.body.innerHTML += FIP.vars.searchBarHTML;
 	return document.querySelector("." + FIP.utils.createClassName("search"));
@@ -442,13 +490,25 @@ FIP.utils.initSearchBar = function() {
 		    search = new FIP.Search(term);
 
 		input.blur();
-		FIP.utils.addClass(searchBar, FIP.utils.createClassName("hidden"));
+
+		searchBar.style.removeProperty("width");
+		searchBar.style.removeProperty("height");
+
+		this.style.removeProperty("width");
+		this.style.removeProperty("-webkit-transform");
 	}, false);
 
 	var inputEvents = {
 		focus : function(e) {
 			e.preventDefault();
-			updatePosition();
+			e.stopPropagation();
+
+			if (FIP.vars._searchTimeout) {
+				window.clearTimeout(FIP.vars._searchTimeout);
+				delete FIP.vars._searchTimeout;
+			} else {
+				updatePosition();
+			}
 		},
 
 		blur : function() {
@@ -469,7 +529,7 @@ FIP.utils.initSearchBar = function() {
 	});
 
 	FIP.utils.addTapListener(searchCancel, function() {
-		FIP.utils.addClass(searchBar, FIP.utils.createClassName("hidden"));
+		document.body.removeChild(document.querySelector("." + FIP.utils.createClassName("search-results")));
 	});
 
 	window.setTimeout(function() {
@@ -504,6 +564,9 @@ FIP.Search = function (needle) {
 	}
 
 
+
+	var total = 0;
+
 	for (i = 0; i < l; i++) {
 		textNode = snapshot.snapshotItem(i);
 		parent = textNode.parentNode;
@@ -536,8 +599,11 @@ FIP.Search = function (needle) {
 			textNode = span.nextSibling;
 
 			FIP.utils.cloneResult(span);
+			total++;
 		}
 	}
+
+	FIP.utils.storeTotalResults(total);
 };
 
 FIP.utils.watchScale();
