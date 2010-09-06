@@ -32,7 +32,7 @@ FIP.vars = {
 	namespace : "fip",
 	typography : ["font-size", "font-weight", "font-style", "line-height", "text-transform"],
 	popoverHTML : '<div class="fip-popover"><div class="fip-device-scale"><ul><li>Prev</li><li>Next</li></ul><ul><li>Match <span></span> of <span></span></li><li></li></ul></div></div>',
-	searchBarHTML : '<div class="fip-search"><form action="#"><fieldset><input type="search" value="" placeholder="Search Page" /><span></span></fieldset><fieldset><input type="reset" value="Cancel" /></fieldset></form></div>'
+	searchBarHTML : '<div class="fip-search"><form action="#"><fieldset><input type="search" value="" placeholder="Search Page" /><span></span></fieldset><fieldset><input type="reset" value="Close" /></fieldset></form></div>'
 };
 
 /*
