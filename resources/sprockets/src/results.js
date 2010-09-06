@@ -47,6 +47,24 @@ FIP.utils.injectPopover = function(result) {
 		FIP.utils.makeResultActive(element);
 	});
 	
+	FIP.utils.addTapListener(search, function(e) {
+		e.preventDefault();
+		
+		FIP.utils.addClass(search, names.active);
+		FIP.utils.removeClass(search, names.drawer);
+		
+		FIP.vars._searchTimeout = window.setTimeout(function() {
+			if (!document.querySelector("input:focus")) {
+				FIP.utils.removeClass(search, names.active);
+				FIP.utils.addClass(search, names.drawer);
+			}
+		}, 4000);
+	});
+	
+	window.setTimeout(function() {
+		FIP.utils.addClass(search, names.drawer);
+	}, 500);
+	
 	return popover;
 };
 
