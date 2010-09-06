@@ -5,8 +5,6 @@
 		<meta name="viewport" content="width=device-width; initial-scale=1.0;" />
 		<title>iOS Scale Test</title>
 		
-		<link rel="stylesheet" href="css/fip.css" type="text/css" media="screen" />
-		
 		<!-- Page Specific -->
 		<style type="text/css" media="screen">
 			* {
@@ -38,9 +36,20 @@
 				font-size: 1em;
 			}
 			
+			textarea {
+				-webkit-box-sizing: border-box;
+				padding: 10px;
+				display: block;
+				width: 280px;
+				height: 200px;
+				border: 1px solid;
+			}
 		</style>
 	</head>
 	<body>
+		<a href='javascript:(function(){var a=document,b=a.createElement("link"),c=a.createElement("script");b.rel="stylesheet";b.type="text/css";b.href="http://rich.local:9003/css/fip.css";a.querySelector("head").appendChild(b);c.type="text/javascript";c.src="http://rich.local:9003/js/fip.js";a.querySelector("body").appendChild(c);})();'>Find in Place</a>
+		<textarea>javascript:(function(){var a=document,b=a.createElement("link"),c=a.createElement("script");b.rel="stylesheet";b.type="text/css";b.href="http://rich.local:9003/css/fip.css";a.querySelector("head").appendChild(b);c.type="text/javascript";c.src="http://rich.local:9003/js/fip.js";a.querySelector("body").appendChild(c);})();</textarea>
+		
 		<!-- Visible Elements -->
 		<h2>Lorem ipsum dolor sit amet</h2>
 		<p>Lorem ipsum dolor sit amet, <a href="#">consectetur adipiscing elit</a>. Vestibulum facilisis nisi et nunc mattis <em>posuere hendrerit eros lacinia. Suspendisse potenti</em>. Quisque elit malesuada, velit non lacinia ut, ultricies in mauris. Maecenas feugiat ultricies massa, quis tristique urna condimentum sit amet. Fusce at sapien quis justo tincidunt dapibus. Ut lacus risus, mattis mollis iaculis quis, tempus a neque. <a href"#">Morbi placerat ornare dui eu dignissim</a>. Nunc ac blandit urna. Maecenas scelerisque congue eros in ultrices. Nulla ut quam eu libero mollis hendrerit. Morbi vestibulum ullamcorper blandit. Suspendisse potenti. Ut eu ante erat, posuere bibendum libero. Sed sagittis, sapien eu feugiat malesuada, <strong>velit velit congue tellus</strong>, mattis hendrerit mauris eros eu purus. Donec varius volutpat diam bibendum pellentesque. Sed nisi mi, dignissim at elementum et, ullamcorper non dui. Nulla facilisi. Integer non lorem metus, ut sagittis orci. Cras varius nulla et tellus placerat ultricies. Aenean bibendum tristique lectus, sed venenatis enim tristique quis.</p>
@@ -73,7 +82,5 @@
 			<!-- nested visibility: hidden; This "ipsum" should display. -->
 			<li style="visibility: hidden;">lorem <em style="visibility: visible;">ipsum dolor</em></li>
 		</ul>
-
-		<script src="js/fip.js" type="text/javascript" charset="utf-8"></script>
 	</body>
 </html>

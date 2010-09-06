@@ -430,13 +430,23 @@ FIP.utils.storeTotalResults = function(total) {
 
 FIP.utils.destroyResults = function() {
 	var names = {
-		results : FIP.utils.createClassName("search-results")
+		results : FIP.utils.createClassName("search-results"),
+		inline : FIP.utils.createClassName("inline-result")
 	};
 
-	var results = document.querySelector("." + names.results);
+	var results = document.querySelector("." + names.results),
+	    inlineResults = document.querySelectorAll("." + names.inline);
 
 	while (results && results.firstChild) {
 		results.removeChild(results.firstChild);
+	}
+
+	for (var i = 0, j = inlineResults.length; i < j; i++) {
+		var inline = inlineResults[i];
+
+		if (inline.parentNode) {
+			inline.parentNode.replaceChild(inline.firstChild, inline);
+		}
 	}
 };
 
@@ -542,6 +552,8 @@ FIP.utils.initSearchBar = function() {
 	});
 
 	FIP.utils.addTapListener(searchCancel, function() {
+		FIP.utils.destroyResults();
+
 		var matches = document.querySelectorAll("*[class^='" + FIP.vars.namespace + "']");
 
 		for (var i = 0, j = matches.length; i < j; i++) {
@@ -550,9 +562,7 @@ FIP.utils.initSearchBar = function() {
 		}
 	});
 
-	window.setTimeout(function() {
-		updatePosition();
-	}, 50);
+	updatePosition();
 };
 
 FIP.Search = function (needle) {

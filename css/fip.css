@@ -17,7 +17,7 @@
   position: absolute;
   width: 100%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.22);
   z-index: 10000;
 }
 /* line 10, ../resources/sass/src/_search.scss */
@@ -79,20 +79,19 @@
 }
 /* line 65, ../resources/sass/src/_search.scss */
 .fip-search form fieldset input[type="reset"] {
-  padding: 0 6px;
+  padding: 0 8px;
   font-size: 12px;
   font-weight: bold;
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.5);
   background: -webkit-gradient(linear, left top, left bottom, from(#2e7ac0), to(#14546b));
   -webkit-border-radius: 4px;
-  border: 1px solid;
-  border-color: #4d5157 #5c6a7d #637185;
+  border: 0;
   -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
 }
 
 @media only screen and (min-device-width: 481px) {
-  /* line 83, ../resources/sass/src/_search.scss */
+  /* line 82, ../resources/sass/src/_search.scss */
   .fip-search form fieldset input[type="search"] {
     padding: 0 20px;
   }
@@ -136,7 +135,7 @@
 .fip-search-results .fip-result {
   position: absolute;
   z-index: 10000;
-  margin-top: -2px;
+  margin-top: -4px;
   margin-left: -2px;
   padding: 1px;
   display: inline-block;
@@ -166,26 +165,27 @@
   font: 14px/16px "Helvetica Neue", Helvetica, sans-serif;
   color: #fff;
   text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.5);
+  text-transform: none;
   font-weight: bold;
   pointer-events: auto;
   -webkit-transform-origin: 0 0;
   /* Disable Loupe */
   -webkit-user-select: none;
 }
-/* line 40, ../resources/sass/src/_popover.scss */
+/* line 41, ../resources/sass/src/_popover.scss */
 .fip-popover * {
   display: inline-block;
   /* Disable Loupe */
   -webkit-user-select: none;
 }
-/* line 47, ../resources/sass/src/_popover.scss */
+/* line 48, ../resources/sass/src/_popover.scss */
 .fip-popover ul {
   -webkit-border-radius: 6px;
   position: relative;
   z-index: 100;
-  width: 115px;
+  width: 116px;
 }
-/* line 53, ../resources/sass/src/_popover.scss */
+/* line 54, ../resources/sass/src/_popover.scss */
 .fip-popover ul li {
   text-align: center;
   padding: 0;
@@ -195,18 +195,16 @@
   -webkit-box-sizing: border-box;
   -webkit-border-radius: 6px;
 }
-/* line 63, ../resources/sass/src/_popover.scss */
+/* line 64, ../resources/sass/src/_popover.scss */
 .fip-popover ul:first-child {
   background: -webkit-gradient(linear, left top, left bottom, from(#3fc0f6), to(#1a7ea8));
   -webkit-box-shadow: 0 0 6px black;
 }
-/* line 67, ../resources/sass/src/_popover.scss */
+/* line 68, ../resources/sass/src/_popover.scss */
 .fip-popover ul:first-child li {
   background: -webkit-gradient(linear, left top, left bottom, from(#3fc0f6), to(#1a7ea8));
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
 }
-/* line 72, ../resources/sass/src/_popover.scss */
+/* line 71, ../resources/sass/src/_popover.scss */
 .fip-popover ul:first-child li:first-child:before {
   top: -7px;
   left: 10px;
@@ -220,36 +218,36 @@
   -webkit-box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
   pointer-events: none;
 }
-/* line 86, ../resources/sass/src/_popover.scss */
+/* line 85, ../resources/sass/src/_popover.scss */
 .fip-popover ul:first-child li:first-child {
-  border-left: 0;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
   -webkit-border-top-right-radius: 0;
   -webkit-border-bottom-right-radius: 0;
 }
-/* line 92, ../resources/sass/src/_popover.scss */
+/* line 91, ../resources/sass/src/_popover.scss */
 .fip-popover ul:first-child li:last-child {
-  border-right: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
   -webkit-border-top-left-radius: 0;
   -webkit-border-bottom-left-radius: 0;
 }
-/* line 98, ../resources/sass/src/_popover.scss */
+/* line 97, ../resources/sass/src/_popover.scss */
 .fip-popover ul:first-child li.fip-hover {
   background: -webkit-gradient(linear, left top, left bottom, from(#e47f55), to(#c1410b));
 }
-/* line 102, ../resources/sass/src/_popover.scss */
+/* line 101, ../resources/sass/src/_popover.scss */
 .fip-popover ul:first-child li:first-child.fip-hover:before {
   background: -webkit-gradient(linear, left top, right bottom, from(#ec875d), to(#e47f55), color-stop(50%, #e47f55));
 }
-/* line 108, ../resources/sass/src/_popover.scss */
+/* line 107, ../resources/sass/src/_popover.scss */
 .fip-popover ul:last-child {
   left: 7px;
   display: block;
   margin: 0;
-  width: 101px;
+  width: 102px;
   z-index: 90;
   position: absolute;
 }
-/* line 116, ../resources/sass/src/_popover.scss */
+/* line 115, ../resources/sass/src/_popover.scss */
 .fip-popover ul:last-child li {
   padding: 0;
   -webkit-border-top-left-radius: 0;
@@ -263,7 +261,7 @@
   -webkit-transition: -webkit-transform 150ms linear;
   -webkit-backface-visibility: hidden;
 }
-/* line 128, ../resources/sass/src/_popover.scss */
+/* line 127, ../resources/sass/src/_popover.scss */
 .fip-popover ul:last-child li:first-child {
   padding: 0 24px 0 6px;
   background: -webkit-gradient(linear, left top, left bottom, from(#bbbbbb), to(#888888));
@@ -277,11 +275,11 @@
   text-align: center;
   -webkit-box-sizing: border-box;
 }
-/* line 141, ../resources/sass/src/_popover.scss */
+/* line 140, ../resources/sass/src/_popover.scss */
 .fip-popover ul:last-child li:first-child:hover {
   background: -webkit-gradient(linear, left top, left bottom, from(#aaaaaa), to(#555555));
 }
-/* line 145, ../resources/sass/src/_popover.scss */
+/* line 144, ../resources/sass/src/_popover.scss */
 .fip-popover ul:last-child li:first-child:after {
   padding: 0 5px;
   content: "\25BC";
@@ -293,46 +291,46 @@
   font-size: 0.7em;
   -webkit-border-bottom-right-radius: 6px;
 }
-/* line 158, ../resources/sass/src/_popover.scss */
+/* line 157, ../resources/sass/src/_popover.scss */
 .fip-popover ul:last-child li:first-child span:nth-child(1):before {
   content: counter(results);
 }
-/* line 162, ../resources/sass/src/_popover.scss */
+/* line 161, ../resources/sass/src/_popover.scss */
 .fip-popover ul:last-child li:first-child span:nth-child(2):before {
   content: attr(data-total-results);
 }
-/* line 168, ../resources/sass/src/_popover.scss */
+/* line 167, ../resources/sass/src/_popover.scss */
 .fip-popover ul:last-child li .fip-search {
   -webkit-transform: translate3d(0, -100%, 0) scale(0.35);
   -webkit-transform-origin: 0 0;
   -webkit-transition: -webkit-transform 150ms linear;
   -webkit-backface-visibility: hidden;
 }
-/* line 172, ../resources/sass/src/_popover.scss */
+/* line 171, ../resources/sass/src/_popover.scss */
 .fip-popover ul:last-child li .fip-search fieldset {
   margin-left: 0;
   margin-right: 0;
 }
-/* line 180, ../resources/sass/src/_popover.scss */
+/* line 179, ../resources/sass/src/_popover.scss */
 .fip-popover ul:last-child.fip-drawer li:first-child {
   -webkit-transform: translate3d(0, 0, 0);
 }
-/* line 186, ../resources/sass/src/_popover.scss */
+/* line 185, ../resources/sass/src/_popover.scss */
 .fip-popover ul:last-child.fip-search-active .fip-search {
   -webkit-transform: translate3d(0, 0, 0) scale(1);
 }
 
 /* Right Aligned */
-/* line 196, ../resources/sass/src/_popover.scss */
+/* line 195, ../resources/sass/src/_popover.scss */
 .fip-popover-right {
   right: -1px;
   left: auto;
 }
-/* line 201, ../resources/sass/src/_popover.scss */
+/* line 200, ../resources/sass/src/_popover.scss */
 .fip-popover-right li:first-child:before {
   display: none;
 }
-/* line 205, ../resources/sass/src/_popover.scss */
+/* line 204, ../resources/sass/src/_popover.scss */
 .fip-popover-right li:last-child:before {
   top: -7px;
   right: 10px;
@@ -346,24 +344,24 @@
   -webkit-box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
   pointer-events: none;
 }
-/* line 219, ../resources/sass/src/_popover.scss */
+/* line 218, ../resources/sass/src/_popover.scss */
 .fip-popover-right li:last-child.fip-hover:before {
   background: -webkit-gradient(linear, left top, right bottom, from(#ec875d), to(#e47f55), color-stop(50%, #e47f55));
 }
 
 /* Left Bottom Aligned */
-/* line 226, ../resources/sass/src/_popover.scss */
+/* line 225, ../resources/sass/src/_popover.scss */
 .fip-popover-bottom {
   top: -57px;
   bottom: auto;
 }
-/* line 231, ../resources/sass/src/_popover.scss */
+/* line 230, ../resources/sass/src/_popover.scss */
 .fip-popover-bottom li:first-child:before, .fip-popover-bottom li:last-child:before {
   bottom: -7px;
   top: auto;
   background: -webkit-gradient(linear, left top, right bottom, from(#238ebb), to(#127098), color-stop(50%, #1b7fa9));
 }
-/* line 237, ../resources/sass/src/_popover.scss */
+/* line 236, ../resources/sass/src/_popover.scss */
 .fip-popover-bottom li:first-child.fip-hover:before, .fip-popover-bottom li:last-child.fip-hover:before {
   background: -webkit-gradient(linear, left top, right bottom, from(#ca521f), to(#ae3a08), color-stop(50%, #c1420c));
 }
