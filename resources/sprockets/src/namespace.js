@@ -1,20 +1,13 @@
 /*
-File: global.js
+File: fip.js
 
 About: Version
 	1.0
 
-Project: The Weather Channel - iPad Ad
+Project: Find in Place for iOS
 
 Description:
-	A common file that includes all globally shared functionality for FIP
-
-Requires:
-	- LABjs <http://labjs.com/>
-	- jQuery
-
-Requires:
-	- <bootstrap.js>
+	Find in Place for Mobile Safari
 	
 */
 
