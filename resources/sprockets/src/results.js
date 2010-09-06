@@ -112,3 +112,12 @@ FIP.utils.cloneResult = function(result) {
 	
 	parent.appendChild(clone);
 };
+
+FIP.utils.storeTotalResults = function(total) {
+	var names = {
+		popover : FIP.utils.createClassName("popover")
+	};
+	
+	var target = document.querySelector("." + names.popover + " ul:last-child li span:nth-child(2)");
+	target.setAttribute("data-total-results", total);
+};

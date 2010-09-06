@@ -38,6 +38,9 @@ FIP.Search = function (needle) {
 
 	// check inside the resulting text nodes for as many matches as possible,
 	// wrapping each result in span.fip-result.fip-inline-result
+	
+	var total = 0;
+	
 	for (i = 0; i < l; i++) {
 		textNode = snapshot.snapshotItem(i);
 		parent = textNode.parentNode;
@@ -73,6 +76,9 @@ FIP.Search = function (needle) {
 			textNode = span.nextSibling;
 			
 			FIP.utils.cloneResult(span);
+			total++;
 		}
 	}
+	
+	FIP.utils.storeTotalResults(total);
 };
