@@ -2,18 +2,23 @@
 
 FIP.utils.injectPopover = function(result) {
 	var names = {
+		search : FIP.utils.createClassName("search"),
 		popover : FIP.utils.createClassName("popover"),
 		result : FIP.utils.createClassName("result"),
-		results : FIP.utils.createClassName("search-results")
+		results : FIP.utils.createClassName("search-results"),
+		drawer : FIP.utils.createClassName("drawer"),
+		active : FIP.utils.createClassName("search-active"),
+		hover : FIP.utils.createClassName("hover")
 	};
 	
 	result.innerHTML += FIP.vars.popoverHTML;
 	
 	var popover = result.querySelector("." + names.popover),
-	    prev = popover.querySelector("li:nth-child(1)"),
-	    next = popover.querySelector("li:nth-child(2)"),
-	    search = popover.querySelector("li:nth-child(3)"),
-	    cancel = popover.querySelector("li:nth-child(4)");
+	    prev = popover.querySelector("ul:first-child li:first-child"),
+	    next = popover.querySelector("ul:first-child li:last-child"),
+	    search = popover.querySelector("ul:last-child");
+	
+	search.querySelector("li:last-child").appendChild(document.querySelector("." + names.search));
 	
 	FIP.utils.addTapListener(prev, function(e) {
 		e.preventDefault();
@@ -30,6 +35,22 @@ FIP.utils.injectPopover = function(result) {
 		
 		FIP.utils.makeResultActive(element);
 	});
+	
+	var hoverIn = function(e) {
+		e.preventDefault();
+		FIP.utils.addClass(this, names.hover);
+	};
+	
+	var hoverOut = function(e) {
+		e.preventDefault();
+		FIP.utils.removeClass(this, names.hover);
+	};
+	
+	prev.addEventListener(FIP.vars.touchstart, hoverIn, false);
+	prev.addEventListener(FIP.vars.touchend, hoverOut, false);
+	
+	next.addEventListener(FIP.vars.touchstart, hoverIn, false);
+	next.addEventListener(FIP.vars.touchend, hoverOut, false);
 	
 	FIP.utils.addTapListener(next, function(e) {
 		e.preventDefault();
