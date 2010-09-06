@@ -45,78 +45,147 @@ $popover-radius: 6px;
 	}
 
 	ul {
-		-webkit-border-radius: 3px;
-		-webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+		-webkit-border-radius: $popover-radius;
 		position: relative;
 		z-index: 100;
-		background: $popoverColor;
-
+		width: $popover-width;
+		
 		li {
 			text-align: center;
-			padding: 0 13px;
-			height: 34px;
-			line-height: 34px;
-			background: $popoverColor;
-			border-right: 1px solid rgba(0, 0, 0, 0.1);
-			border-left: 1px solid rgba(255, 255, 255, 0.1);
-
-			&:first-child:before {
-				top: -7px;
-				left: 10px;
-				position: absolute;
-				z-index: -1;
-				width: 14px;
-				height: 14px;
-				background: $popoverTipColor;
-				content: "";
-				-webkit-transform: rotate(45deg);
-				-webkit-box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-				pointer-events: none;
-			}
-
-			&:hover {
-				background: $popoverActiveColor;
-			}
-
-			&:first-child:hover:before {
-				background: $popoverTipInvertedColor;
-			}
-
-			&:first-child {
-				border-left: 0;
-				-webkit-border-top-left-radius: 3px;
-				-webkit-border-bottom-left-radius: 3px;
-			}
-
-			&:last-child {
-				border-right: 0;
-				-webkit-border-top-right-radius: 3px;
-				-webkit-border-bottom-right-radius: 3px;
-			}
+			padding: 0;
+			width: 50%;
+			height: $popover-height;
+			line-height: $popover-height;
+			-webkit-box-sizing: border-box;
+			-webkit-border-radius: $popover-radius;
+		}
+		
+		&:first-child {
+			background: $popover-color;
+			-webkit-box-shadow: $popover-box-shadow;
 			
-			&:nth-child(3), &:nth-child(4) {
+			li {
+				background: $popover-color;
+				border-right: 1px solid rgba(0, 0, 0, 0.1);
+				border-left: 1px solid rgba(255, 255, 255, 0.1);
+
+				&:first-child:before {
+					top: -($popover-tip-size / 2);
+					left: 10px;
+					position: absolute;
+					z-index: -1;
+					width: $popover-tip-size;
+					height: $popover-tip-size;
+					background: $popover-tip-color;
+					content: "";
+					-webkit-transform: rotate(45deg);
+					-webkit-box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+					pointer-events: none;
+				}
+
+				&:first-child {
+					border-left: 0;
+					-webkit-border-top-right-radius: 0;
+					-webkit-border-bottom-right-radius: 0;
+				}
+
+				&:last-child {
+					border-right: 0;
+					-webkit-border-top-left-radius: 0;
+					-webkit-border-bottom-left-radius: 0;
+				}
+
+				&.fip-hover {
+					background: $popover-active-color;
+				}
+
+				&:first-child.fip-hover:before {
+					background: $popover-tip-inverted-color;
+				}
+			}
+		}
+		
+		&:last-child {
+			left: $popover-margin;
+			display: block;
+			margin: 0;
+			width: $popover-width - ($popover-margin * 2);
+			z-index: 90;
+			position: absolute;
+			
+			li {
 				padding: 0;
-				width: 44px;
-				overflow: hidden;
-				text-indent: -9999px;
-			}
-			
-			&:nth-child(3) { 
-				background: inline-image("edit.png") no-repeat center, $popoverColor; 
-				-webkit-background-size: auto 60%, auto auto;
+				-webkit-border-top-left-radius: 0;
+				-webkit-border-top-right-radius: 0;
+				height: $popover-height * 0.8;
+				line-height: $popover-height * 0.8;
+				position: relative;
+				text-align: left;
+
+				-webkit-transform: translate3d(0, -100%, 0);
+				@include popover-transition;
+
+				&:first-child {
+					padding: 0 ($popover-radius * 4) 0 $popover-radius;
+					background: $opts-color;
+					-webkit-box-shadow: $popover-box-shadow;
+					display: inline-block;
+					z-index: 100;
+					color: rgba(255, 255, 255, 0.9);
+					min-width: 100%;
+					white-space: nowrap;
+					font-size: 0.7em;
+					text-align: center;
+					-webkit-box-sizing: border-box;
+					
+					&:hover {
+						background: $opts-active-color;
+					}
+					
+					&:after {
+						padding: 0 5px;
+						content: "\25BC";
+						position: absolute;
+						top: 0;
+						right: 0;
+						height: 100%;
+						background: rgba(0, 0, 0, 0.1);
+						font-size: 0.7em;
+						-webkit-border-bottom-right-radius: $popover-radius;
+					}
+					
+					span {
+						&:nth-child(1):before {
+							content: counter(results);
+						}
+						
+						&:nth-child(2):before {
+							content: attr(data-total-results);
+						}
+					}
+				}
+				
+				.fip-search {
+					-webkit-transform: translate3d(0, -100%, 0) scale(0.35);
+					@include popover-transition;
+				
+					fieldset {
+						margin-left: 0;
+						margin-right: 0;
+					}
+				}
 			}
 
-			&:nth-child(3):hover {
-				background: inline-image("edit.png") no-repeat center, $popoverActiveColor;
+			&.fip-drawer {
+				li:first-child {
+					-webkit-transform: translate3d(0, 0, 0);
+				}
 			}
 			
-			&:nth-child(4) {
-				background: inline-image("close.png") no-repeat center, $popoverColor;
-				-webkit-background-size: auto 50%, auto auto;
-			}
-			
-			&:nth-child(4):hover {
-				background: inline-image("close.png") no-repeat center, $popoverActiveColor;
+			&.fip-search-active {
+				.fip-search {
+					-webkit-transform: translate3d(0, 0, 0) scale(1);
+				}
 			}
 		}
 	}
@@ -134,38 +203,38 @@ $popover-radius: 6px;
 		}
 
 		&:last-child:before {
-			top: -7px;
+			top: -($popover-tip-size / 2);
 			right: 10px;
 			position: absolute;
 			z-index: -1;
-			width: 14px;
-			height: 14px;
-			background: -webkit-gradient(linear, left top, right bottom, from(#3dbdf3), to(#33abdd), color-stop(50%, #3dbdf3));
+			width: $popover-tip-size;
+			height: $popover-tip-size;
+			background: $popover-tip-color;
 			content: "";
 			-webkit-transform: rotate(45deg);
 			-webkit-box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
 			pointer-events: none;
 		}
 		
-		&:last-child:hover:before {
-			background: -webkit-gradient(linear, left top, right bottom, from(#ec875d), to(#e47f55), color-stop(50%, #e47f55));
+		&:last-child.fip-hover:before {
+			background: $popover-tip-inverted-color;
 		}
 	}
 }
 
 /* Left Bottom Aligned */
 .fip-popover-bottom {
-	top: -54px;
+	top: -($popover-offset);
 	bottom: auto;
 	
 	li {
 		&:first-child:before, &:last-child:before {
-			bottom: -7px;
+			bottom: -($popover-tip-size / 2);
 			top: auto;
 			background: -webkit-gradient(linear, left top, right bottom, from(#238ebb), to(#127098), color-stop(50%, #1b7fa9));
 		}
 
-		&:first-child:hover:before, &:last-child:hover:before {
+		&:first-child.fip-hover:before, &:last-child.fip-hover:before {
 			background: -webkit-gradient(linear, left top, right bottom, from(#ca521f), to(#ae3a08), color-stop(50%, #c1420c));
 		}
 	}
