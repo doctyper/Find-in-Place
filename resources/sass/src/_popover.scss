@@ -1,5 +1,5 @@
 $popover-font: 14px/16px "Helvetica Neue", Helvetica, sans-serif;
-$popover-width: 115px;
+$popover-width: 116px;
 $popover-height: 38px;
 $popover-margin: 7px;
 $popover-offset: $popover-height * 1.5;
@@ -30,6 +30,7 @@ $popover-radius: 6px;
 	font: $popover-font;
 	color: #fff;
 	text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.5);
+	text-transform: none;
 	font-weight: bold;
 	pointer-events: auto;
 	-webkit-transform-origin: 0 0;
@@ -66,8 +67,6 @@ $popover-radius: 6px;
 			
 			li {
 				background: $popover-color;
-				border-right: 1px solid rgba(0, 0, 0, 0.1);
-				border-left: 1px solid rgba(255, 255, 255, 0.1);
 
 				&:first-child:before {
 					top: -($popover-tip-size / 2);
@@ -84,13 +83,13 @@ $popover-radius: 6px;
 				}
 
 				&:first-child {
-					border-left: 0;
+					border-right: 1px solid rgba(0, 0, 0, 0.1);
 					-webkit-border-top-right-radius: 0;
 					-webkit-border-bottom-right-radius: 0;
 				}
 
 				&:last-child {
-					border-right: 0;
+					border-left: 1px solid rgba(255, 255, 255, 0.1);
 					-webkit-border-top-left-radius: 0;
 					-webkit-border-bottom-left-radius: 0;
 				}
