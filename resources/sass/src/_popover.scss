@@ -1,15 +1,33 @@
-$popoverColor: -webkit-gradient(linear, left top, left bottom, from(#3fc0f6), to(#1a7ea8));
-$popoverActiveColor: -webkit-gradient(linear, left top, left bottom, from(#e47f55), to(#c1410b));
-$popoverTipColor: -webkit-gradient(linear, left top, right bottom, from(#3dbdf3), to(#33abdd), color-stop(50%, #3dbdf3));
-$popoverTipInvertedColor: -webkit-gradient(linear, left top, right bottom, from(#ec875d), to(#e47f55), color-stop(50%, #e47f55));
+$popover-font: 14px/16px "Helvetica Neue", Helvetica, sans-serif;
+$popover-width: 115px;
+$popover-height: 38px;
+$popover-margin: 7px;
+$popover-offset: $popover-height * 1.5;
+$popover-color: -webkit-gradient(linear, left top, left bottom, from(#3fc0f6), to(#1a7ea8));
+$popover-active-color: -webkit-gradient(linear, left top, left bottom, from(#e47f55), to(#c1410b));
+$popover-box-shadow: 0 0 6px rgba(0, 0, 0, 1);
+
+$popover-tip-size: 14px;
+$popover-tip-color: -webkit-gradient(linear, left top, right bottom, from(#3dbdf3), to(#33abdd), color-stop(50%, #3dbdf3));
+$popover-tip-inverted-color: -webkit-gradient(linear, left top, right bottom, from(#ec875d), to(#e47f55), color-stop(50%, #e47f55));
+
+$opts-color: -webkit-gradient(linear, left top, left bottom, from(#bbb), to(#888));
+$opts-active-color: -webkit-gradient(linear, left top, left bottom, from(#aaa), to(#555));
+
+$popover-radius: 6px;
+
+@mixin popover-transition {
+	-webkit-transform-origin: 0 0;
+	-webkit-transition: -webkit-transform 150ms linear;
+	-webkit-backface-visibility: hidden;
+}
 
 .fip-popover {
-	bottom: -54px;
+	bottom: -($popover-offset);
 	left: -1px;
 	display: inline-block;
 	position: absolute;
-	white-space: nowrap;
-	font: 14px/16px "Helvetica Neue", Helvetica, sans-serif;
+	font: $popover-font;
 	color: #fff;
 	text-shadow: 0 -1px 1px rgba(0, 0, 0, 0.5);
 	font-weight: bold;
