@@ -28,74 +28,76 @@ FIP.Search = function (needle) {
 			XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
 			null),
 		l = snapshot.snapshotLength,
-		textNode, text, match, i, span, beginOffset, endOffset, parent;
+		textNode, text, match, i, k, span, beginOffset, endOffset, parent;
 
-
-	
 	var needleArr = needle.split(""),
 	    construct = "", iterSnapshot,
 	    positiveMatches = [],
 	    possibleFalseNegativeMatches = [],
 	    falseNegativeMatches = [];
-	
+
 	for (i = 0; i < l; i++) {
 		positiveMatches.push(snapshot.snapshotItem(i));
 	}
 	
-	for (var i = 0, j = needleArr.length; i < j; i++) {
-		construct += needleArr[i];
-		
-		iterSnapshot = d.evaluate(
-			"//text()[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + construct.toLowerCase() + "')]",
-			d.body,
-			null,
-			XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
-			null);
-		
-		if (iterSnapshot.snapshotLength) {
-			for (var k = 0, l = iterSnapshot.snapshotLength; k < l; k++) {
-				var node = iterSnapshot.snapshotItem(k),
-				    boundaryMatch = new RegExp(construct + "$", "i").exec(node.data),
-				    nextSibling = node.nextSibling;
-				
-				if (boundaryMatch && nextSibling) {
-					possibleFalseNegativeMatches.push({
-						node : node,
-						data : node.data,
-						parentNode : node.parentNode,
-						charAt : construct.length,
-						construct : construct,
-						term : needle,
-						sibling : nextSibling
-					});
+	if (needleLength > 1) {
+		for (i = 0, j = needleArr.length; i < j; i++) {
+			construct += needleArr[i];
+
+			iterSnapshot = d.evaluate(
+				"//text()[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + construct.toLowerCase() + "')]",
+				d.body,
+				null,
+				XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+				null);
+
+			if (iterSnapshot.snapshotLength) {
+				for (k = 0, l = iterSnapshot.snapshotLength; k < l; k++) {
+					var node = iterSnapshot.snapshotItem(k),
+					    boundaryMatch = new RegExp(construct + "$", "i").exec(node.data),
+					    nextSibling = node.nextSibling;
+
+					if (boundaryMatch && nextSibling) {
+						possibleFalseNegativeMatches.push({
+							node : node,
+							data : node.data,
+							parentNode : node.parentNode,
+							charAt : construct.length,
+							construct : construct,
+							term : needle,
+							sibling : nextSibling
+						});
+					}
 				}
 			}
+
 		}
-		
-	}
-	
-	possibleFalseNegativeMatches.forEach(function(item, i) {
-		var sibText = item.sibling.firstChild.nodeValue;
-		var remainderMatch = new RegExp("^" + item.term.slice(item.charAt), "i").exec(sibText);
-		
-		if (remainderMatch) {
-			item.remainder = remainderMatch[0];
-			falseNegativeMatches.push(item);
-			
-			for (var key in item) {
-				item.node[key] = item[key];
+
+		possibleFalseNegativeMatches.forEach(function(item, i) {
+			var sibText = item.sibling.firstChild.nodeValue;
+			var remainderMatch = new RegExp("^" + item.term.slice(item.charAt), "i").exec(sibText);
+
+			if (remainderMatch) {
+				item.remainder = remainderMatch[0];
+				falseNegativeMatches.push(item);
+
+				for (var key in item) {
+					item.node[key] = item[key];
+				}
 			}
-		}
-	});
-	
-	positiveMatches = positiveMatches.concat(falseNegativeMatches);
+		});
+
+		positiveMatches = positiveMatches.concat(falseNegativeMatches);
+	}
 
 	if (positiveMatches < 1) {
-		throw("Warning: Couldn't find the search term anywhere. Tried really hard.")
+		throw("Warning: Couldn't find the search term anywhere. Tried really hard.");
 	}
 
 	// check inside the resulting text nodes for as many matches as possible,
 	// wrapping each result in span.fip-result.fip-inline-result
+	var total = 0, obj;
+	
 	for (i = 0; i < positiveMatches.length; i++) {
 		textNode = positiveMatches[i];
 		
@@ -106,7 +108,8 @@ FIP.Search = function (needle) {
 		}
 		
 		while (textNode && (match = caseInsensitiveNeedle.exec(textNode.data + (textNode.remainder || ""))) !== null) {
-
+			obj = null;
+			
 			text = textNode.data;
 			beginOffset = match.index;
 			endOffset = beginOffset + needleLength;
@@ -125,19 +128,34 @@ FIP.Search = function (needle) {
 					textNode = textNode.nextSibling;
 				} else {
 					textNode.node.splitText(beginOffset);
+					
+					obj = textNode;
 					textNode = textNode.node.nextSibling;
 				}
 			}
 
 			span = d.createElement("span");
 			
-			parent.replaceChild(span, (textNode.node || textNode));
-			span.appendChild(textNode.node || textNode);
-			span.className = "fip-result fip-inline-result";
+			parent.replaceChild(span, textNode);
+			span.appendChild(textNode);
+			
+			if (obj) {
+				var sib = obj.sibling.cloneNode(true),
+				    sibMatch = sib.firstChild.splitText(obj.remainder.length);
+				
+				sib.replaceChild(sib.firstChild, sibMatch);
+				span.appendChild(sib);
+			}
+			
+			FIP.utils.addClass(span, FIP.utils.createClassName("result"));
+			FIP.utils.addClass(span, FIP.utils.createClassName("inline-result"));
 
 			textNode = span.nextSibling;
 			
-			FIP.utils.cloneResult(span);
+			FIP.utils.buildResult(span);
+			total++;
 		}
 	}
+	
+	FIP.utils.storeTotalResults(total);
 };

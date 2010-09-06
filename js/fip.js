@@ -183,7 +183,41 @@ FIP.utils = {
 		 	&& !skip) {
 			return true;
 		}
-	}
+	},
+
+	addTapListener : function(node, handler) {
+
+		var firedAttribute = "data-touchmove-fired";
+
+		var events = {
+			touchstart : function(e) {
+				this.removeAttribute(firedAttribute);
+			},
+			touchmove : function(e) {
+				this.setAttribute(firedAttribute, window.parseInt(this.getAttribute(firedAttribute) || "0") + 1);
+			},
+			touchend : function(e) {
+				if (!this.getAttribute(firedAttribute) || this.getAttribute(firedAttribute) < 5) {
+					handler.call(this, e);
+				}
+
+				this.removeAttribute(firedAttribute);
+			}
+		};
+
+		for (var key in events) {
+			node.addEventListener(FIP.vars[key], events[key], false);
+		}
+
+	},
+
+	touchEvents : function() {
+		var hasTouchSupport = "createTouch" in document;
+
+		FIP.vars.touchstart = hasTouchSupport ? "touchstart" : "mousedown";
+		FIP.vars.touchmove = hasTouchSupport ? "touchmove" : "mousemove";
+		FIP.vars.touchend = hasTouchSupport ? "touchend" : "mouseup";
+	}()
 };
 
 
@@ -238,9 +272,12 @@ FIP.utils.injectPopover = function(result) {
 	};
 
 	result.innerHTML += FIP.vars.popoverHTML;
-	var popover = result.querySelector("." + names.popover);
 
-	popover.querySelector("li:first-child").addEventListener("touchend", function(e) {
+	var popover = result.querySelector("." + names.popover),
+	    prev = popover.querySelector("li:first-child"),
+	    next = popover.querySelector("li:last-child");
+
+	FIP.utils.addTapListener(prev, function(e) {
 		e.preventDefault();
 
 		var element = popover.parentNode.previousSibling;
@@ -254,9 +291,9 @@ FIP.utils.injectPopover = function(result) {
 		}
 
 		FIP.utils.makeResultActive(element);
-	}, false);
+	});
 
-	popover.querySelector("li:last-child").addEventListener("touchend", function(e) {
+	FIP.utils.addTapListener(next, function(e) {
 		e.preventDefault();
 
 		var element = popover.parentNode.nextSibling;
@@ -270,7 +307,7 @@ FIP.utils.injectPopover = function(result) {
 		}
 
 		FIP.utils.makeResultActive(element);
-	}, false);
+	});
 
 	return popover;
 };
@@ -353,7 +390,6 @@ FIP.utils.initSearchBar = function() {
 	    searchInput = searchForm.querySelector("input:first-child"),
 	    searchCancel = searchForm.querySelector("input:last-child"),
 	    searchCover = searchForm.querySelector("span"),
-	    firedAttribute = "data-touchmove-fired",
 	    transform = window.getComputedStyle(searchBar, null).webkitTransform,
 	    matrix = new WebKitCSSMatrix(transform);
 
@@ -385,8 +421,8 @@ FIP.utils.initSearchBar = function() {
 		}
 	}
 
-	document.addEventListener("touchmove", preventDefault, false);
-	document.addEventListener("touchend", preventDefault, false);
+	document.addEventListener(FIP.vars.touchmove, preventDefault, false);
+	document.addEventListener(FIP.vars.touchend, preventDefault, false);
 
 	searchForm.addEventListener("submit", function(e) {
 		e.preventDefault();
@@ -399,34 +435,32 @@ FIP.utils.initSearchBar = function() {
 		FIP.utils.addClass(searchBar, FIP.utils.createClassName("hidden"));
 	}, false);
 
-	searchInput.addEventListener("focus", function(e) {
-		e.preventDefault();
-		updatePosition();
-	}, false);
+	var inputEvents = {
+		focus : function(e) {
+			e.preventDefault();
+			updatePosition();
+		},
 
-	searchCover.addEventListener("touchstart", function(e) {
-		this.removeAttribute(firedAttribute);
-	}, false);
-
-	searchCover.addEventListener("touchmove", function(e) {
-		this.setAttribute(firedAttribute, window.parseInt(this.getAttribute(firedAttribute) || "0") + 1);
-	}, false);
-
-	searchCover.addEventListener("touchend", function(e) {
-		if (!this.getAttribute(firedAttribute) || this.getAttribute(firedAttribute) < 5) {
-			this.parentNode.removeChild(this);
+		blur : function() {
+			searchCover = document.createElement("span");
+			this.parentNode.appendChild(searchCover);
 		}
+	};
 
-		this.removeAttribute(firedAttribute);
-	}, false);
+	for (var key in inputEvents) {
+		searchInput.addEventListener(key, inputEvents[key], false);
+	}
 
-	searchCover.addEventListener("mouseup", function(e) {
-		this.parentNode.removeChild(this);
-	}, false);
+	FIP.utils.addTapListener(searchCover.parentNode, function(e) {
+		if (e.target === searchCover) {
+			searchInput.focus();
+			this.removeChild(searchCover);
+		}
+	});
 
-	searchCancel.addEventListener("click", function() {
+	FIP.utils.addTapListener(searchCancel, function() {
 		FIP.utils.addClass(searchBar, FIP.utils.createClassName("hidden"));
-	}, false);
+	});
 
 	window.setTimeout(function() {
 		updatePosition();
@@ -453,47 +487,134 @@ FIP.Search = function (needle) {
 			XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
 			null),
 		l = snapshot.snapshotLength,
-		textNode, text, match, i, span, beginOffset, endOffset, parent;
+		textNode, text, match, i, k, span, beginOffset, endOffset, parent;
 
-	if (l < 1) {
-		throw("Warning: Couldn't find the search term anywhere. Tried really hard.")
-	}
-
+	var needleArr = needle.split(""),
+	    construct = "", iterSnapshot,
+	    positiveMatches = [],
+	    possibleFalseNegativeMatches = [],
+	    falseNegativeMatches = [];
 
 	for (i = 0; i < l; i++) {
-		textNode = snapshot.snapshotItem(i);
+		positiveMatches.push(snapshot.snapshotItem(i));
+	}
+
+	if (needleLength > 1) {
+		for (i = 0, j = needleArr.length; i < j; i++) {
+			construct += needleArr[i];
+
+			iterSnapshot = d.evaluate(
+				"//text()[contains(translate(., 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + construct.toLowerCase() + "')]",
+				d.body,
+				null,
+				XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+				null);
+
+			if (iterSnapshot.snapshotLength) {
+				for (k = 0, l = iterSnapshot.snapshotLength; k < l; k++) {
+					var node = iterSnapshot.snapshotItem(k),
+					    boundaryMatch = new RegExp(construct + "$", "i").exec(node.data),
+					    nextSibling = node.nextSibling;
+
+					if (boundaryMatch && nextSibling) {
+						possibleFalseNegativeMatches.push({
+							node : node,
+							data : node.data,
+							parentNode : node.parentNode,
+							charAt : construct.length,
+							construct : construct,
+							term : needle,
+							sibling : nextSibling
+						});
+					}
+				}
+			}
+
+		}
+
+		possibleFalseNegativeMatches.forEach(function(item, i) {
+			var sibText = item.sibling.firstChild.nodeValue;
+			var remainderMatch = new RegExp("^" + item.term.slice(item.charAt), "i").exec(sibText);
+
+			if (remainderMatch) {
+				item.remainder = remainderMatch[0];
+				falseNegativeMatches.push(item);
+
+				for (var key in item) {
+					item.node[key] = item[key];
+				}
+			}
+		});
+
+		positiveMatches = positiveMatches.concat(falseNegativeMatches);
+	}
+
+	if (positiveMatches < 1) {
+		throw("Warning: Couldn't find the search term anywhere. Tried really hard.");
+	}
+
+	var total = 0, obj;
+
+	for (i = 0; i < positiveMatches.length; i++) {
+		textNode = positiveMatches[i];
+
 		parent = textNode.parentNode;
 
 		if (FIP.utils.isHidden(parent)) {
 			continue;
 		}
 
-		while (textNode && (match = caseInsensitiveNeedle.exec(textNode.data)) !== null) {
+		while (textNode && (match = caseInsensitiveNeedle.exec(textNode.data + (textNode.remainder || ""))) !== null) {
+			obj = null;
 
 			text = textNode.data;
 			beginOffset = match.index;
 			endOffset = beginOffset + needleLength;
 
 			if (text.length > endOffset) {
-				textNode.splitText(endOffset);
+				if (textNode.splitText) {
+					textNode.splitText(endOffset);
+				} else {
+					textNode.node.splitText(endOffset);
+				}
 			}
 
 			if (beginOffset !== 0) {
-				textNode.splitText(beginOffset);
-				textNode = textNode.nextSibling;
+				if (textNode.splitText) {
+					textNode.splitText(beginOffset);
+					textNode = textNode.nextSibling;
+				} else {
+					textNode.node.splitText(beginOffset);
+
+					obj = textNode;
+					textNode = textNode.node.nextSibling;
+				}
 			}
 
 			span = d.createElement("span");
+
 			parent.replaceChild(span, textNode);
 			span.appendChild(textNode);
-			span.className = "fip-result fip-inline-result";
 
+			if (obj) {
+				var sib = obj.sibling.cloneNode(true),
+				    sibMatch = sib.firstChild.splitText(obj.remainder.length);
+
+				sib.replaceChild(sib.firstChild, sibMatch);
+				span.appendChild(sib);
+			}
+
+			FIP.utils.addClass(span, FIP.utils.createClassName("result"));
+			FIP.utils.addClass(span, FIP.utils.createClassName("inline-result"));
 
 			textNode = span.nextSibling;
 
-			FIP.utils.cloneResult(span);
+			FIP.utils.buildResult(span);
+			total++;
 		}
 	}
+
+	FIP.utils.storeTotalResults(total);
 };
 
 FIP.utils.watchScale();
