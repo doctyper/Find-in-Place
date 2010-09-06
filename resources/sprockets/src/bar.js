@@ -102,6 +102,8 @@ FIP.utils.initSearchBar = function() {
 	});
 	
 	FIP.utils.addTapListener(searchCancel, function() {
+		FIP.utils.destroyResults();
+		
 		var matches = document.querySelectorAll("*[class^='" + FIP.vars.namespace + "']");
 		
 		for (var i = 0, j = matches.length; i < j; i++) {
@@ -111,7 +113,5 @@ FIP.utils.initSearchBar = function() {
 	});
 	
 	// Initialize
-	window.setTimeout(function() {
-		updatePosition();
-	}, 50);
+	updatePosition();
 };
